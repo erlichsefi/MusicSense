@@ -169,7 +169,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     songTotalDuration ,
                     LastSongName,
                     progress+"%",
-                    "APP START");
+                    "App start");
         }
 
         //------- Checks whether there was a request for permission ------
@@ -252,7 +252,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                             songTotalDuration ,
                             LastSongName,
                             progress+"%",
-                            "APP START");
+                            "App start");
 
                     //----------------------------------------------------
                     // permission was granted, yay! Do the
@@ -442,7 +442,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                 songTotalDuration ,
                 LastSongName ,
                 "From : "+progress+"% | TO : "+seekBar.getProgress()+"%",
-                "progress BAR");
+                "Progress bar");
 
         // forward or backward to certain seconds
         mp.seekTo(currentPosition);
@@ -508,7 +508,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     songTotalDuration ,
                     LastSongName,
                     progress+"%",
-                    "fROM LIST");
+                    "Choose song");
         }
 
     }
@@ -554,7 +554,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                 songTotalDuration ,
                 LastSongName ,
                 progress+"%",
-                "backward");
+                "Backward");
 
     }
 
@@ -596,7 +596,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                         songTotalDuration ,
                         LastSongName,
                         progress+"%",
-                        "stop");
+                        "Stop");
                 //----------------
                 // Changing button image to play button
                 btnPlay.setImageResource(R.drawable.img_btn_play);
@@ -613,7 +613,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                         songTotalDuration ,
                         LastSongName,
                         progress+"%",
-                        "play");
+                        "Play");
                 //----------------
                 // Changing button image to pause button
                 btnPlay.setImageResource(R.drawable.img_btn_pause);
@@ -680,7 +680,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     songTotalDuration ,
                     LastSongName,
                     progress+"%",
-                    "Repeat OFF");
+                    "Repeat off");
             btnRepeat.setImageResource(R.drawable.img_btn_repeat);
         }else{
             // make repeat to true
@@ -694,7 +694,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     songTotalDuration ,
                     LastSongName,
                     progress+"%",
-                    "Repeat ON");
+                    "Repeat on");
             btnRepeat.setImageResource(R.drawable.img_btn_repeat_pressed);
            /////    btnShuffle.setImageResource(R.drawable.btn_shuffle);
         }
@@ -712,7 +712,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     songTotalDuration ,
                     LastSongName,
                     progress+"%",
-                    "Shuffle OFF");
+                    "Shuffle off");
             btnShuffle.setImageResource(R.drawable.img_btn_shuffle);
         }else{
             // make repeat to true
@@ -724,7 +724,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     songTotalDuration ,
                     LastSongName,
                     progress+"%",
-                    "Shuffle ON");
+                    "Shuffle on");
             // make shuffle to false
              ////   isRepeat = false;
             btnShuffle.setImageResource(R.drawable.img_btn_shuffle_pressed);
