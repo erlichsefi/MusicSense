@@ -13,13 +13,8 @@ import java.util.ArrayList;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 16/12/2017.
- */
 
-
-
-public class Accelerometer implements SensorEventListener{
+public class Accelerometer implements SensorEventListener {
 
     private static final String TAG = "Accelerometer";
 
@@ -28,24 +23,24 @@ public class Accelerometer implements SensorEventListener{
     private SensorManager SM;
     private ArrayList<Double> acc = new ArrayList<Double>();
 
-        public Accelerometer(Context context) {
-            SM = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-            mySensor = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        }
+    public Accelerometer(Context context) {
+        SM = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        mySensor = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    }
 
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            x = event.values[0];
-            z = event.values[1];
-            y = event.values[2];
-            DataShow.print("AC",event);
-        }
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        x = event.values[0];
+        z = event.values[1];
+        y = event.values[2];
+        DataShow.print("AC", event);
+    }
 
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
-    public void startMeasurement(){
+    public void startMeasurement() {
 
         if (SM != null) {
             if (mySensor != null) {
@@ -64,14 +59,14 @@ public class Accelerometer implements SensorEventListener{
     }
 
 
-    public ArrayList<Double> getAccelerometerData (){
-            acc.add(x);
-            acc.add(y);
-            acc.add(z);
-            return acc;
+    public ArrayList<Double> getAccelerometerData() {
+        acc.add(x);
+        acc.add(y);
+        acc.add(z);
+        return acc;
 
     }
 
-    }
+}
 
 
