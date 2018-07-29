@@ -1,10 +1,5 @@
 package metaextract.nkm.com.myplayer;
 
-/**
- * Created by Most601 on 15/12/2017.
- */
-
-
 import android.os.Environment;
 import android.util.Log;
 import java.io.BufferedReader;
@@ -19,36 +14,28 @@ import java.io.InputStreamReader;
 public class FileManager {
 
     private static final String TAG = "FileManager";
-
     public String filePath;
-    private File file ;
+    private File file;
 
 
+    public FileManager(String Filename, boolean append) {
 
-    //-----------------------------------------------------------------------------------------------
-
-
-
-
-    //-------------------Aviv--------------------
-    public FileManager(String Filename , boolean append ) {
-        boolean a = isExternalStorageWritable();
-        if (a) {
+        if (isExternalStorageWritable()) {
             Log.d(TAG, "External Storage Writable");
         } else {
             Log.d(TAG, "External Storage not Writable");
         }
-        File outputStream1 = getPublicPicturesDirectory("Log");
-        filePath = outputStream1.getPath();
-        file = new File(filePath, Filename+".csv"  );
-        if(file.length() == 0) {
+        File outputStream = getPublicPicturesDirectory("Log");
+        filePath = outputStream.getPath();
+        file = new File(filePath, Filename + ".csv");
+        if (file.length() == 0) {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file, append));
                 bw.write(String.valueOf(Filename + "\n"));
                 bw.close();
-                Log.d(TAG, "File created - "+Filename);
+                Log.d(TAG, "File created - " + Filename);
                 //if we first time install the app, create head-line for the file.
-                if(Filename.equals("Activity")){
+                if (Filename.equals("Activity")) {
                     writeInternalFileCsvNewLINE("Date", true);
                     writeInternalFileCsvSameLine("Time", true);
                     writeInternalFileCsvSameLine("Song id", true);
@@ -58,37 +45,33 @@ public class FileManager {
                     writeInternalFileCsvSameLine("Position in the SeekBar", true);
                     writeInternalFileCsvSameLine("Activity", true);
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
-    //------------ Aviv CSV----------------------------
-
-    public void writeInternalFileCsvNewLINE( String content, boolean   append){
+    public void writeInternalFileCsvNewLINE(String content, boolean append) {
         try {
             FileWriter _file;
-            _file = new FileWriter(file.getAbsoluteFile(),append);
+            _file = new FileWriter(file.getAbsoluteFile(), append);
             _file.append('\n');
-            _file.append(content+",");
+            _file.append(content + ",");
             _file.close();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
 
     }
 
-    public void writeInternalFileCsvSameLine(  String content, boolean   append) {
+    public void writeInternalFileCsvSameLine(String content, boolean append) {
         try {
             FileWriter _file;
-            _file = new FileWriter(file.getAbsoluteFile(),append);
-            _file.append(content+",");
+            _file = new FileWriter(file.getAbsoluteFile(), append);
+            _file.append(content + ",");
             _file.close();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -97,42 +80,30 @@ public class FileManager {
         return file.delete();
     }
 
-    //---------------------------end Aviv-----------------------------
-
-
-
-
-
-
-
-
-
-    //----------------- writeInternalFile String ---------------------------------------------------
     /**
      * External Storage Methods
      **/
     public void writeInternalFile(String fileName, String content, boolean append) throws IOException {
-        boolean a = isExternalStorageWritable();
-        if (a) {
+        if (isExternalStorageWritable()) {
             Log.e("FileManager ", "1111111111111111111111111111111");
         } else {
             Log.e("FileManager  ", "0000000000000000000000000000000");
         }
 
         //----------- הוספה שלי לעומת המקור ----------
-        File outputStream1 = getPublicPicturesDirectory("Log");
-        filePath = outputStream1.getPath();
-        File file = new File(filePath, fileName+".csv" );
+        File outputStream = getPublicPicturesDirectory("Log");
+        filePath = outputStream.getPath();
+        File file = new File(filePath, fileName + ".csv");
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file,append));
-            bw.write(String.valueOf(content+"\n"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, append));
+            bw.write(String.valueOf(content + "\n"));
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         //--------------------
 
-       // writeInternalFile(fileName, content.getBytes(), append);
+        // writeInternalFile(fileName, content.getBytes(), append);
     }
 
     //------- writeInternalFile byte[] ---------
@@ -169,7 +140,6 @@ public class FileManager {
             while ((content = bufferedReader.readLine()) != null) {
                 stringBuilder.append(content);
             }
-
             // Releasing resources.
             bufferedReader.close();
             streamReader.close();
@@ -177,26 +147,8 @@ public class FileManager {
 
             content = stringBuilder.toString();
         }
-
         return content;
     }
-
-
-    //----------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //------- We check to see if there is External Storage. ----------------------------------------
 
@@ -249,28 +201,6 @@ public class FileManager {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //****************** /** Internal Storage המקורי של אחסון פנימי  **/  *******************************
