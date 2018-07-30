@@ -2,48 +2,67 @@ package metaextract.nkm.com.myplayer;
 
 import android.graphics.Bitmap;
 
-/**
- * Created by Most601 on 29/11/2017.
- */
-
 public class Song {
 
-    private long id;
-    private String title;
-    private String artist;
-    private String data;
-    private String album;
-    private String GENRE;
-    private String DURATION;
-    private Bitmap songImage;
+    private long Id;
+    private String Title;
+    private String Artist;
+    private String Data;
+    private String Album;
+    private String Genre;
+    private String Duration;
+    private Bitmap SongImage;
 
-    public Song(long songID, String songTitle ) {
-        id = songID;
-        title = songTitle;
+    public Song(long songID, String songTitle) {
+        Id = songID;
+        Title = songTitle;
     }
 
     public Song(long songID,
                 String songTitle,
                 String songArtist,
-                String songData ,
-                String songAlbum ,
-                String songGenre , String songDuration ,  Bitmap songImage ) {
-        id = songID;
-        title = songTitle;
-        artist = songArtist;
-        data = songData;
-        album = songAlbum;
-        GENRE = songGenre;
-        DURATION = songDuration;
-        this.songImage = songImage;
+                String songData,
+                String songAlbum,
+                String songGenre, String songDuration, Bitmap songImage) {
+        Id = songID;
+        Title = songTitle;
+        Artist = songArtist;
+        Data = songData;
+        Album = songAlbum;
+        Genre = songGenre;
+        Duration = songDuration;
+        this.SongImage = songImage;
     }
 
-    public long getID(){return id;}
-    public String getTitle(){return title;}
-    public String getArtist(){return artist;}
-    public String getdata(){return data;}
-    public String getDuration(){return DURATION;}
-    public String getAlbum(){return album;}
-    public String getGenre(){return GENRE;}
-    public Bitmap getImage(){return songImage;}
+    public long getID() {
+        return Id;
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public String getArtist() {
+        return Artist;
+    }
+
+    public String getdata() {
+        return Data;
+    }
+
+    public String getDuration() {
+        return Duration;
+    }
+
+    public String getAlbum() {
+        return Album;
+    }
+
+    public String getGenre() {
+        return Genre;
+    }
+
+    public Bitmap getImage() {
+        return SongImage;
+    }
 }

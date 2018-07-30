@@ -13,30 +13,26 @@ import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 15/12/2017.
- */
 
 public class HeartrRate implements SensorEventListener {
 
     private static final String TAG = "HeartrRate";
-
     private String msg;
     private SensorManager sMgr;
     private Sensor mHeartrateSensor = null;
     private ScheduledExecutorService mScheduler;
 
-    public HeartrRate(Context context){
-        sMgr = (SensorManager)context.getSystemService(SENSOR_SERVICE);
+    public HeartrRate(Context context) {
+        sMgr = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         mHeartrateSensor = sMgr.getDefaultSensor(Sensor.TYPE_HEART_RATE);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_HEART_RATE) {
-            msg = " Value sensor: " + (int)event.values[0];
+            msg = " Value sensor: " + (int) event.values[0];
         }
-        DataShow.print("H",event);
+        DataShow.print("H", event);
     }
 
     @Override
@@ -44,16 +40,11 @@ public class HeartrRate implements SensorEventListener {
         System.out.println("onAccuracyChanged - accuracy: " + accuracy);
     }
 
-
     public void startMeasurement() {
-
-
         if (mHeartrateSensor != null) {
-            sMgr.registerListener(this, mHeartrateSensor,SensorManager.SENSOR_DELAY_NORMAL);
-
-            final int measurementDuration   = 30;   // Seconds
-            final int measurementBreak      = 15;    // Seconds
-
+            sMgr.registerListener(this, mHeartrateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            final int measurementDuration = 30;   // Seconds
+            final int measurementBreak = 15;    // Seconds
             mScheduler = Executors.newScheduledThreadPool(1);
             mScheduler.scheduleAtFixedRate(
                     new Runnable() {
@@ -63,7 +54,6 @@ public class HeartrRate implements SensorEventListener {
                             sMgr.registerListener(HeartrRate.this,
                                     mHeartrateSensor,
                                     SensorManager.SENSOR_DELAY_FASTEST);
-
                             try {
                                 Thread.sleep(measurementDuration * 1000);
                             } catch (InterruptedException e) {
@@ -75,12 +65,9 @@ public class HeartrRate implements SensorEventListener {
 
                         }
                     }, 3, measurementDuration + measurementBreak, TimeUnit.SECONDS);
-
         } else {
             Log.d(TAG, "No Heartrate Sensor found");
         }
-
-
     }
 
     public void stopMeasurement() {
@@ -91,5 +78,5 @@ public class HeartrRate implements SensorEventListener {
             mScheduler.shutdown();
         }
     }
-    
+
 }

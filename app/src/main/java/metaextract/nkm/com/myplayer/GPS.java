@@ -12,11 +12,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 
-
-/**
- * Created by Most601 on 15/12/2017.
- */
-
 public class GPS implements LocationListener {
 
     private LocationManager locationManager;
@@ -24,21 +19,16 @@ public class GPS implements LocationListener {
     private String longitude;
     private Criteria criteria;
     private String provider;
-
     private static DataReceiveManager DM;
 
     public GPS(Context context) {
 
         DM = DataReceiveManager.getInstance(context);
-
-        locationManager = (LocationManager) context
-                .getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         provider = locationManager.getBestProvider(criteria, true);
-
-
-        if (ActivityCompat.checkSelfPermission(context , Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
                 (context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -48,11 +38,10 @@ public class GPS implements LocationListener {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return ;
+            return;
         }
-        locationManager.requestLocationUpdates("gps", 5000,0, this);
+        locationManager.requestLocationUpdates("gps", 5000, 0, this);
         setMostRecentLocation(locationManager.getLastKnownLocation(provider));
-
     }
 
     private void setMostRecentLocation(Location lastKnownLocation) {
@@ -67,18 +56,15 @@ public class GPS implements LocationListener {
         return longitude;
     }
 
-
-
-
     @Override
     public void onLocationChanged(Location location) {
-        float lon = (float)(location.getLongitude());/// * 1E6);
-        float lat = (float)(location.getLatitude());// * 1E6);
+        float lon = (float) (location.getLongitude());/// * 1E6);
+        float lat = (float) (location.getLatitude());// * 1E6);
         latitude = lat + "";
         longitude = lon + "";
-        if (lat != 0 && lon != 0 ){
-            float gpsArr[] = {lon ,lat};
-            DM.addSensorData("GPS" , -1,-1,-1,gpsArr);
+        if (lat != 0 && lon != 0) {
+            float gpsArr[] = {lon, lat};
+            DM.addSensorData("GPS", -1, -1, -1, gpsArr);
             stopGPS();
         }
 
@@ -99,7 +85,7 @@ public class GPS implements LocationListener {
 
     }
 
-    public void stopGPS (){
+    public void stopGPS() {
         locationManager.removeUpdates(this);
     }
 

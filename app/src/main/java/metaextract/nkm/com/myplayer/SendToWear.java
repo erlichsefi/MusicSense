@@ -15,13 +15,18 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
-/**
- * Created by Most601 on 09/03/2018.
- */
 
 public class SendToWear implements GoogleApiClient.ConnectionCallbacks {
 
     private static SendToWear STW;
+    private static String TAG = "STW";
+    private GoogleApiClient mGoogleApiClient;
+    private Node mNode;
+
+    public SendToWear(Context context) {
+        mGoogleApiClient = new GoogleApiClient.Builder(context).addApi(Wearable.API).addConnectionCallbacks(this).build();
+        mGoogleApiClient.connect();
+    }
 
     public static synchronized SendToWear getInstance(Context context) {
         if (STW == null) {
@@ -30,62 +35,33 @@ public class SendToWear implements GoogleApiClient.ConnectionCallbacks {
         return STW;
     }
 
-
-//--------------------------------------------------------------------------------------------------
-
-
-    private static String TAG = "STW";
-    private GoogleApiClient mGoogleApiClient ;
-    private Node mNode;
-
-    public SendToWear(Context context) {
-
-        mGoogleApiClient = new
-                GoogleApiClient.Builder(context)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-               // .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
     private boolean validateConnection() {
         if (mGoogleApiClient.isConnected()) {
             return true;
-        }
-        else {
+        } else {
             mGoogleApiClient.connect();
         }
         return mGoogleApiClient.isConnected();
     }
 
-
-
-//--------------------------------------------------------------------------------------------------
-
-
-    public synchronized void sendMessage(String type , final String message ) {
+    public synchronized void sendMessage(String type, final String message) {
         resolveNode();
-        if(mGoogleApiClient != null &&
+        if (mGoogleApiClient != null &&
                 validateConnection() &&
                 mNode != null
                 ) {
-            Log.d(TAG,"Message is going to be sent to watch");
+            Log.d(TAG, "Message is going to be sent to watch");
 
-            Wearable.MessageApi.sendMessage(mGoogleApiClient,
-                    mNode.getId(),
-                    type,
-                    message.getBytes())
-                    .setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
-                        @Override
-                        public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
-                            if(sendMessageResult.getStatus().isSuccess()) {
-                                Log.e(TAG,"Message Succesfully sent to watch=>"+message);
-                            } else {
-                                Log.e(TAG,"Message FAILED TO BE SENT to watch=>"+message);
-                            }
-                        }
-                    });
+            Wearable.MessageApi.sendMessage(mGoogleApiClient, mNode.getId(), type, message.getBytes()).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+                @Override
+                public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
+                    if (sendMessageResult.getStatus().isSuccess()) {
+                        Log.e(TAG, "Message Succesfully sent to watch=>" + message);
+                    } else {
+                        Log.e(TAG, "Message FAILED TO BE SENT to watch=>" + message);
+                    }
+                }
+            });
         }
     }
 
@@ -98,8 +74,7 @@ public class SendToWear implements GoogleApiClient.ConnectionCallbacks {
                         for (Node node : nodes.getNodes()) {
                             if (node != null && node.isNearby()) {
                                 mNode = node;
-                                Log.d(TAG, "Sending data to : " +node.getDisplayName());
-
+                                Log.d(TAG, "Sending data to : " + node.getDisplayName());
                             }
                         }
                         if (mNode == null) {
@@ -108,9 +83,6 @@ public class SendToWear implements GoogleApiClient.ConnectionCallbacks {
                 }) //returns a set of nods.
         ;
     }
-    //----------------------------------------------------------------------------------------------
-
-
 
     public synchronized void send(PutDataRequest putDataRequest) {
         if (validateConnection()) {
@@ -118,22 +90,15 @@ public class SendToWear implements GoogleApiClient.ConnectionCallbacks {
                     (new ResultCallback<DataApi.DataItemResult>() {
                         @Override
                         public void onResult(DataApi.DataItemResult dataItemResult) {
-                            if(dataItemResult.getStatus().isSuccess() ) {
-                                Log.d("SENDDDDDDDDD Data", "Sending data: " +dataItemResult.getStatus().isSuccess() );
-                            }
-                            else {
-                                Log.d("SENDDDDDDDDD Data", "Sending data: " +dataItemResult.getStatus().isSuccess() );
-
-
+                            if (dataItemResult.getStatus().isSuccess()) {
+                                Log.d("SENDDDDDDDDD Data", "Sending data: " + dataItemResult.getStatus().isSuccess());
+                            } else {
+                                Log.d("SENDDDDDDDDD Data", "Sending data: " + dataItemResult.getStatus().isSuccess());
                             }
                         }
                     });
         }
     }
-
-//--------------------------------------------------------------------------------
-
-
 
     @Override
     //From addConnectionCallbacks.
@@ -143,25 +108,21 @@ public class SendToWear implements GoogleApiClient.ConnectionCallbacks {
                 .setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
                     @Override
                     public void onResult(@NonNull NodeApi.GetConnectedNodesResult nodes) {
-                        for (Node node : nodes.getNodes()){
-                            if(node != null && node.isNearby()){
+                        for (Node node : nodes.getNodes()) {
+                            if (node != null && node.isNearby()) {
                                 mNode = node;
-                                Log.d(TAG,"Connected to -- " + mNode.getDisplayName());
+                                Log.d(TAG, "Connected to -- " + mNode.getDisplayName());
                             }
                         }
-                        if(mNode == null){
+                        if (mNode == null) {
                             Log.d(TAG, "Not connected");
                         }
-
                     }
                 })
         ;
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
     }
-
-
 }

@@ -4,29 +4,23 @@ package metaextract.nkm.com.myplayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+
 import android.app.ListActivity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.net.Uri;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.widget.SimpleAdapter;
 
 public class PlayListActivity extends ListActivity {
 
 
-    private ArrayList<Song> songList= new ArrayList<Song>();
+    private ArrayList<Song> songList = new ArrayList<Song>();
     private ListView songView;
     private MediaMetadataRetriever metaRetriver;
 
@@ -34,35 +28,25 @@ public class PlayListActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playlist);
-
         metaRetriver = new MediaMetadataRetriever();
 
 
-
-        //------------------------- getPlayList ----------------------------------------------------
+        //getPlayList
 
         ContentResolver musicResolver = getContentResolver();
         Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
 
-        if(musicCursor!=null && musicCursor.moveToFirst()){
+        if (musicCursor != null && musicCursor.moveToFirst()) {
             //get columns
-            int idColumn = musicCursor.getColumnIndex
-                    (android.provider.MediaStore.Audio.Media._ID);
-            int titleColumn = musicCursor.getColumnIndex
-                    (MediaStore.Audio.Media.DISPLAY_NAME);
-
+            int idColumn = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media._ID);
+            int titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME);
             String fullPath = musicCursor.getString(musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-
             //add songs to list
             do {
                 long thisId = musicCursor.getLong(idColumn);
                 String thisTitle = musicCursor.getString(titleColumn);
-                this.songList.add( new Song( thisId , thisTitle  ));
-
-
-
-
+                this.songList.add(new Song(thisId, thisTitle));
 //---------------------------- GETIN DATA FROM SONG + PIC ------------------------
 //                metaRetriver.setDataSource(thiData);
 //                try {
@@ -79,37 +63,25 @@ public class PlayListActivity extends ListActivity {
 //                    artist.setText("Unknown Artist");
 //                    genre.setText("Unknown Genre");
 //                }
-
-
-
-
             }
             while (musicCursor.moveToNext());
         }
-
-
-        //--------------- sort abc.... ----------------------
-        Collections.sort(songList, new Comparator<Song>(){
-            public int compare(Song a, Song b){
+        Collections.sort(songList, new Comparator<Song>() {
+            public int compare(Song a, Song b) {
                 return a.getTitle().compareTo(b.getTitle());
             }
         });
-        //----------------------------------------------------
 
-
-        //--------------- ListView Adapter use ---------------
+        //ListView Adapter use
         songView = getListView();
-        SongAdapter songAdt = new SongAdapter(this , R.layout.playlist , songList);
+        SongAdapter songAdt = new SongAdapter(this, R.layout.playlist, songList);
         songView.setAdapter(songAdt);
         // Adding menuItems to ListView
 
-        //-----------------------------------------------------
+        //selecting Song
 
-
-
-        //-------------- selecting Song -----------------------
         // selecting single ListView item
-        ListView lv =  getListView();
+        ListView lv = getListView();
         // listening to single listitem click
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -118,7 +90,6 @@ public class PlayListActivity extends ListActivity {
                                     int position, long id) {
                 // getting listitem index
                 int songIndex = position;
-
                 // Starting new intent
                 Intent in = new Intent(getApplicationContext(),
                         MainActivity.class);
@@ -129,14 +100,7 @@ public class PlayListActivity extends ListActivity {
                 finish();
             }
         });
-
-        //-----------------------------------------------------
-
-
-
-
     }
-
 }
 
 
