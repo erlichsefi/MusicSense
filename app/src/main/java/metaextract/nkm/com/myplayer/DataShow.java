@@ -2,8 +2,6 @@ package metaextract.nkm.com.myplayer;
 
 
 import android.hardware.SensorEvent;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +18,7 @@ public class DataShow extends AppCompatActivity {
     private static TextView timeDateText, GpsText, HeartrRateText, xText, yText, zText;
     private Accelerometer accelerometer;
     private GPS gps;
-    private HeartrRate heartrRate;
+    private HeartRate heartRate;
     private SendToWear STW;
     private int counter = 0;
 
@@ -35,7 +33,7 @@ public class DataShow extends AppCompatActivity {
         GpsText = findViewById(R.id.textgps);
         gps = new GPS(this);
         HeartrRateText = findViewById(R.id.textH);
-        heartrRate = new HeartrRate(this);
+        heartRate = new HeartRate(this);
         HeartrRateText.setText("Push To Start");
         accelerometer = new Accelerometer(this);
         xText = findViewById(R.id.acc_x);
@@ -52,11 +50,11 @@ public class DataShow extends AppCompatActivity {
 
     public void HeartrRateStartButten(View view) {
         HeartrRateText.setText("Wait ....");
-        heartrRate.startMeasurement();
+        heartRate.startMeasurement();
     }
 
     public void HeartrRateStopButten(View view) {
-        heartrRate.stopMeasurement();
+        heartRate.stopMeasurement();
     }
 
     public void StartAccelerometer() {

@@ -14,15 +14,15 @@ import java.util.concurrent.TimeUnit;
 import static android.content.Context.SENSOR_SERVICE;
 
 
-public class HeartrRate implements SensorEventListener {
+public class HeartRate implements SensorEventListener {
 
-    private static final String TAG = "HeartrRate";
+    private static final String TAG = "HeartRate";
     private String msg;
     private SensorManager sMgr;
     private Sensor mHeartrateSensor = null;
     private ScheduledExecutorService mScheduler;
 
-    public HeartrRate(Context context) {
+    public HeartRate(Context context) {
         sMgr = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         mHeartrateSensor = sMgr.getDefaultSensor(Sensor.TYPE_HEART_RATE);
     }
@@ -51,7 +51,7 @@ public class HeartrRate implements SensorEventListener {
                         @Override
                         public void run() {
                             Log.d(TAG, "register Heartrate Sensor");
-                            sMgr.registerListener(HeartrRate.this,
+                            sMgr.registerListener(HeartRate.this,
                                     mHeartrateSensor,
                                     SensorManager.SENSOR_DELAY_FASTEST);
                             try {
@@ -61,7 +61,7 @@ public class HeartrRate implements SensorEventListener {
                             }
 
                             Log.d(TAG, "unregister Heartrate Sensor");
-                            sMgr.unregisterListener(HeartrRate.this, mHeartrateSensor);
+                            sMgr.unregisterListener(HeartRate.this, mHeartrateSensor);
 
                         }
                     }, 3, measurementDuration + measurementBreak, TimeUnit.SECONDS);
