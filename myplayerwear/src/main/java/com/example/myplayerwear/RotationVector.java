@@ -9,17 +9,13 @@ import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 04/04/2018.
- */
-
 public class RotationVector implements SensorEventListener {
 
     private static final String TAG = "RotationVector";
 
     private Sensor mySensor;
     private SensorManager SM;
-    private SendToPhone STP ;
+    private SendToPhone STP;
 
     public RotationVector(Context context) {
         SM = (SensorManager) context.getSystemService(SENSOR_SERVICE);
@@ -31,12 +27,12 @@ public class RotationVector implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //print on datashow
         try {
-            DataShow.print("RotationVector",event);
-        }catch (Exception e){
+            DataShow.print("RotationVector", event);
+        } catch (Exception e) {
         }
 
         STP.sendSensorData(
-                event.sensor.getStringType() ,
+                event.sensor.getStringType(),
                 event.sensor.getType(),
                 event.accuracy,
                 event.timestamp,
@@ -48,7 +44,7 @@ public class RotationVector implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    public void startMeasurement(){
+    public void startMeasurement() {
         // Register sensor Listener
         if (SM != null) {
             if (mySensor != null) {

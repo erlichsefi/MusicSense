@@ -9,22 +9,18 @@ import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 04/04/2018.
- */
-
-public class Gravity implements SensorEventListener  {
+public class Gravity implements SensorEventListener {
 
 
     private static final String TAG = "Gravity";
 
-    private Sensor mySensor;
+    private Sensor MySensor;
     private SensorManager SM;
-    private SendToPhone STP ;
+    private SendToPhone STP;
 
-    public Gravity (Context context){
+    public Gravity(Context context) {
         SM = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        mySensor = SM.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        MySensor = SM.getDefaultSensor(Sensor.TYPE_GRAVITY);
         STP = SendToPhone.getInstance(context);
     }
 
@@ -32,11 +28,11 @@ public class Gravity implements SensorEventListener  {
     @Override
     public void onSensorChanged(SensorEvent event) {
         try {
-            DataShow.print("Gravity",event);
-        }catch (Exception e){
+            DataShow.print("Gravity", event);
+        } catch (Exception e) {
         }
         STP.sendSensorData(
-                event.sensor.getStringType() ,
+                event.sensor.getStringType(),
                 event.sensor.getType(),
                 event.accuracy,
                 event.timestamp,
@@ -49,11 +45,11 @@ public class Gravity implements SensorEventListener  {
     }
 
 
-    public void startMeasurement(){
+    public void startMeasurement() {
         // Register sensor Listener
         if (SM != null) {
-            if (mySensor != null) {
-                SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
+            if (MySensor != null) {
+                SM.registerListener(this, MySensor, SensorManager.SENSOR_DELAY_NORMAL);
             } else {
                 Log.w(TAG, "No Accelerometer found");
             }

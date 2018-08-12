@@ -4,59 +4,34 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Comparator;
-
-public class MainActivity extends WearableActivity{// implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
+public class MainActivity extends WearableActivity {// implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     private SendToPhone STP;
-    private ManageOfSensors manageOfSensors;
+    private ManageOfSensors ManageOfSensors;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         STP = SendToPhone.getInstance(this);
-        manageOfSensors = ManageOfSensors.getInstance(this);
+        ManageOfSensors = ManageOfSensors.getInstance(this);
 
 
-
-        //------------------------- permission -----------------------------------------------------
+        //permission
 
         //------- Checking for permission ------
         int permissionCheck = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE);
 
         //------- If there is permission then we will get the song list ------
-        if (permissionCheck == 0 ){
+        if (permissionCheck == 0) {
         }
 
         //------- Checks whether there was a request for permission ------
@@ -84,17 +59,14 @@ public class MainActivity extends WearableActivity{// implements GoogleApiClient
                 // result of the request.
             }
         }
-
-    //---------------------------------------------------------------------------------------------
     }
 
-
-
-    //---------------------------------------------------------------------------------------------
     //----- Getting approval for permission ------
+
     /**
      * Getting approval for permission
-     * @param requestCode - The code for the specific permission
+     *
+     * @param requestCode  - The code for the specific permission
      * @param permissions
      * @param grantResults
      */
@@ -125,9 +97,6 @@ public class MainActivity extends WearableActivity{// implements GoogleApiClient
         }
     }
 
-    //---------------------------------------------------------------------------------------------
-
-
 //    @Override
 //    //Connect to the external node.
 //    protected void onStart() {
@@ -142,26 +111,29 @@ public class MainActivity extends WearableActivity{// implements GoogleApiClient
 //        mGoogleApiClient.disconnect();
 //    }
 
-    //---------------------------------------------------------------------------------------------
     public void play(View view) {
         STP.sendMessage("Player", "play");
     }
+
     public void backward(View view) {
         STP.sendMessage("Player", "backward");
     }
+
     public void Previous(View view) {
         STP.sendMessage("Player", "Previous");
     }
+
     public void Next(View view) {
         STP.sendMessage("Player", "Next");
     }
-    public void Forward(View view) {STP.sendMessage("Player", "Forward");
+
+    public void Forward(View view) {
+        STP.sendMessage("Player", "Forward");
     }
 
-    //---------------------------------------------------------------------------------------------
     public void DataShow1(View view) {
         Intent intent = new Intent(this, DataShow.class);
-      //  intent.putExtra("sampleObject", (Parcelable) mGoogleApiClient);
+        //  intent.putExtra("sampleObject", (Parcelable) mGoogleApiClient);
         startActivity(intent);
 
     }

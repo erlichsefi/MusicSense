@@ -9,22 +9,17 @@ import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 27/02/2018.
- */
 
-public class stepCounter implements SensorEventListener {
+public class StepCounter implements SensorEventListener {
 
-    private static final String TAG = "stepCounter";
-
-
+    private static final String TAG = "StepCounter";
     private SensorManager sMgr;
     private Sensor stepCounterSensor;
     private String msg;
-    private SendToPhone STP ;
+    private SendToPhone STP;
 
-    public stepCounter(Context context){
-        sMgr = (SensorManager)context.getSystemService(SENSOR_SERVICE);
+    public StepCounter(Context context) {
+        sMgr = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         stepCounterSensor = sMgr.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         STP = SendToPhone.getInstance(context);
 
@@ -33,13 +28,13 @@ public class stepCounter implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            msg = " Value Step Counter : " + (int)event.values[0];
+            msg = " Value Step Counter : " + (int) event.values[0];
             //////////////////////////
-            STP.sendSensorData(event.sensor.getStringType() , event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+            STP.sendSensorData(event.sensor.getStringType(), event.sensor.getType(), event.accuracy, event.timestamp, event.values);
             //////////////////////////
             try {
-                DataShow.print("SC" , event);
-            }catch (Exception e){
+                DataShow.print("SC", event);
+            } catch (Exception e) {
             }
         }
 

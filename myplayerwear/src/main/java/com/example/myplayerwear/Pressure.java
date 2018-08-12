@@ -9,21 +9,19 @@ import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 04/04/2018.
- */
+
 
 public class Pressure implements SensorEventListener {
 
     private static final String TAG = "Pressure";
 
-    private Sensor mySensor;
+    private Sensor MySensor;
     private SensorManager SM;
     private SendToPhone STP ;
 
     public Pressure(Context context) {
         SM = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        mySensor = SM.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        MySensor = SM.getDefaultSensor(Sensor.TYPE_PRESSURE);
         STP = SendToPhone.getInstance(context);
     }
 
@@ -51,8 +49,8 @@ public class Pressure implements SensorEventListener {
     public void startMeasurement(){
         // Register sensor Listener
         if (SM != null) {
-            if (mySensor != null) {
-                SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
+            if (MySensor != null) {
+                SM.registerListener(this, MySensor, SensorManager.SENSOR_DELAY_NORMAL);
             } else {
                 Log.w(TAG, "No Pressure found");
             }

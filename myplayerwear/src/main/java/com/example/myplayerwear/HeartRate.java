@@ -6,36 +6,32 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import java.util.concurrent.Executors;
+
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 15/12/2017.
- */
 
-public class HeartrRate implements SensorEventListener {
+public class HeartRate implements SensorEventListener {
 
-    private static final String TAG = "HeartrRate";
+    private static final String TAG = "HeartRate";
 
     private String msg;
     private SensorManager SM;
-    private Sensor mHeartrateSensor = null;
+    private Sensor MyHeartRateSensor = null;
     private ScheduledExecutorService mScheduler;
-    private SendToPhone STP ;
+    private SendToPhone STP;
 
-    public HeartrRate(Context context){
-        SM = (SensorManager)context.getSystemService(SENSOR_SERVICE);
-        mHeartrateSensor = SM.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+    public HeartRate(Context context) {
+        SM = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        MyHeartRateSensor = SM.getDefaultSensor(Sensor.TYPE_HEART_RATE);
         STP = SendToPhone.getInstance(context);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (SM != null) {
-            if (mHeartrateSensor != null) {
+            if (MyHeartRateSensor != null) {
                 if (event.sensor.getType() == Sensor.TYPE_HEART_RATE) {
                     msg = " Value sensor: " + (int) event.values[0];
                     STP.sendSensorData(
@@ -58,9 +54,9 @@ public class HeartrRate implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    public void startMeasurement(){
-        if (mHeartrateSensor != null) {
-            SM.registerListener(this, mHeartrateSensor,SensorManager.SENSOR_DELAY_NORMAL);
+    public void startMeasurement() {
+        if (MyHeartRateSensor != null) {
+            SM.registerListener(this, MyHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
 //            final int measurementDuration   = 30;   // Seconds
 //            final int measurementBreak      = 15;    // Seconds
 //            mScheduler = Executors.newScheduledThreadPool(1);
@@ -69,8 +65,8 @@ public class HeartrRate implements SensorEventListener {
 //                        @Override
 //                        public void run() {
 //                            Log.d(TAG, "register Heartrate Sensor");
-//                            SM.registerListener(HeartrRate.this,
-//                                    mHeartrateSensor,
+//                            SM.registerListener(HeartRate.this,
+//                                    MyHeartRateSensor,
 //                                    SensorManager.SENSOR_DELAY_FASTEST);
 //
 //                            try {
@@ -80,7 +76,7 @@ public class HeartrRate implements SensorEventListener {
 //                            }
 //
 //                            Log.d(TAG, "unregister Heartrate Sensor");
-//                            SM.unregisterListener(HeartrRate.this, mHeartrateSensor);
+//                            SM.unregisterListener(HeartRate.this, MyHeartRateSensor);
 //
 //                        }
 //                    }, 3, measurementDuration + measurementBreak, TimeUnit.SECONDS);

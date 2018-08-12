@@ -9,9 +9,6 @@ import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-/**
- * Created by Most601 on 04/04/2018.
- */
 
 public class MagneticField implements SensorEventListener {
 
@@ -20,9 +17,9 @@ public class MagneticField implements SensorEventListener {
 
     private Sensor mySensor;
     private SensorManager SM;
-    private SendToPhone STP ;
+    private SendToPhone STP;
 
-    public MagneticField(Context context){
+    public MagneticField(Context context) {
         SM = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         mySensor = SM.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         STP = SendToPhone.getInstance(context);
@@ -32,11 +29,11 @@ public class MagneticField implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         try {
-            DataShow.print("MagneticField",event);
-        }catch (Exception e){
+            DataShow.print("MagneticField", event);
+        } catch (Exception e) {
         }
         STP.sendSensorData(
-                event.sensor.getStringType() ,
+                event.sensor.getStringType(),
                 event.sensor.getType(),
                 event.accuracy,
                 event.timestamp,
@@ -49,7 +46,7 @@ public class MagneticField implements SensorEventListener {
     }
 
 
-    public void startMeasurement(){
+    public void startMeasurement() {
         // Register sensor Listener
         if (SM != null) {
             if (mySensor != null) {
@@ -66,7 +63,6 @@ public class MagneticField implements SensorEventListener {
             SM.unregisterListener(this);
         }
     }
-
 
 
 }
