@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +33,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static metaextract.nkm.com.myplayer.FileManager.getPublicPicturesDirectory;
 
 public class MainActivity extends Activity implements OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     //--- The buttons of the player: forward, backward, next, previous, play, repeat and shuffle.---
@@ -92,6 +96,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     private int mDay = cc.get(Calendar.DAY_OF_MONTH);
     private int mHour = cc.get(Calendar.HOUR_OF_DAY);
     private int mMinute = cc.get(Calendar.MINUTE);
+    private int mSecond = cc.get(Calendar.SECOND);
     //------------------//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,10 +163,12 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             mDay = cc.get(Calendar.DAY_OF_MONTH);
             mHour = cc.get(Calendar.HOUR_OF_DAY);
             mMinute = cc.get(Calendar.MINUTE);
+            mSecond = cc.get(Calendar.SECOND);
             DM_SONGLIST = new  DataReceiveManager(this ,
                     "Date "+String.format("%02d,%02d,%d", mDay , month, year)+" - SONGLIST");
             DM_SONGLIST.addSongList(songsList);
             //------------------- Activity FILE ----------------------------------------------------
+
             DM_Activity = new DataReceiveManager(this ,"Activity" );
             DM_Activity.ActivityFILE(
                     currentSongName,
@@ -252,8 +259,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                             songTotalDuration ,
                             LastSongName,
                             progress+"%",
-                            "App start");
-
+                            "App installed");
                     //----------------------------------------------------
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
@@ -596,7 +602,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                         songTotalDuration ,
                         LastSongName,
                         progress+"%",
-                        "Stop");
+                        "Pause");
                 //----------------
                 // Changing button image to play button
                 btnPlay.setImageResource(R.drawable.img_btn_play);
@@ -736,6 +742,18 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     //--------------- onDestroy ----------------------------------------------------------
     @Override
     protected void onRestart() {
+
+        /*
+        File f = getPublicPicturesDirectory("Log");
+        File full = new File(f,"Activity.csv");
+        if(full.exists() && !full.isDirectory()) {
+            ActivityReader ar = new ActivityReader(String.format("%02d:%02d:%02d", mHour, mMinute, mSecond) ,mDay + "/" + month + "/" + year);
+            ar.extractData();
+        }
+        else{
+            ActivityReader ar = new ActivityReader(full.getPath());
+        }
+        */
         super.onRestart();
     }
     @Override
@@ -748,7 +766,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     }
     @Override
     public void onDestroy(){
-        super.onDestroy();
         mp.release();
         DM_Activity.ActivityFILE(
                 currentSongName,
@@ -756,8 +773,9 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                 songTotalDuration ,
                 LastSongName,
                 progress+"%",
-                "Destroy");
-       }
+                "App stop");
+        super.onDestroy();
+    }
 
     //---------------- Info button ---------------------------------------------------------
 

@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
+
+    configurations.all {
+        resolutionStrategy.force 'junit:junit:4.12'
+    }
+
     defaultConfig {
         applicationId "metaextract.nkm.com.myplayer"
         minSdkVersion 19
@@ -16,10 +21,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
 
+    compile 'org.nd4j:nd4j-native-platform:1.0.0-alpha'
     implementation 'com.google.android.gms:play-services-wearable:11.6.2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
@@ -30,5 +40,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-
 }
+
