@@ -11,7 +11,7 @@ import static metaextract.nkm.com.myplayer.FileManager.getPublicPicturesDirector
 
 public class ReadFileCSV {
 
-    public Vector<Double> ReadSensor(String FileName ,int column, String StartingTime, String finishTime, String date) {
+    public Vector<Double> ReadSensor(String FileName, int column, String StartingTime, String finishTime) {
         Vector<Double> data = new Vector<>();
         File input = new File(FileName);
         String Time;
@@ -28,21 +28,19 @@ public class ReadFileCSV {
             }
             String[] split = row.split(",");
             if (split.length > 1 && split.length > column) {
-                String Date = split[0];
-                String Finishtime = finishTime;
                 Time = split[1];
-                String convertedStartingtime = null;
-                String convertedFinishTime = null;
-                String convertedCurrentTime = null;
+                String convertedStartingTime;
+                String convertedFinishTime;
+                String convertedCurrentTime;
                 String [] split1 = StartingTime.split(":");
-                convertedStartingtime = split1[0]+split1[1]+split1[2];
+                convertedStartingTime = split1[0]+split1[1]+split1[2];
                 String [] split2 = Time.split(":");
                 convertedCurrentTime = split2[0]+split2[1]+split2[2];
-                String [] split3 = Finishtime.split(":");
+                String [] split3 = finishTime.split(":");
                 convertedFinishTime = split3[0]+split3[1]+split3[2];
 
                 //find the correct line to start reading from
-                while (Double.parseDouble(convertedCurrentTime) < Double.parseDouble(convertedStartingtime)) {
+                while (Double.parseDouble(convertedCurrentTime) < Double.parseDouble(convertedStartingTime)) {
                     row = br.readLine();
                     if(row == null){
                         br.close();
@@ -97,12 +95,11 @@ public class ReadFileCSV {
         return data;
     }
 
-    public String[][] ReadActivity(String date, String StartingTime) {
+    public String[][] ReadActivity(String StartingTime) {
         File f = getPublicPicturesDirectory("Log");
         File input = new File(f,"Activity.csv");
-        //File input = new File("C:\\Users\\Aviv\\Desktop\\project\\Log\\Activity.csv");
         String[][] res = new String[2][];
-        String Time = null;
+        String Time;
         try {
             FileReader fr = new FileReader(input);
             BufferedReader br = new BufferedReader(fr);
@@ -112,7 +109,6 @@ public class ReadFileCSV {
             String row = br.readLine();
             String[] split = row.split(",");
             if (split.length > 1) {
-                String Date = split[0];
                 Time = split[1];
                 String [] regTime = Time.split(":");
                 double convertedCurrentTime = Double.parseDouble(regTime[0]+regTime[1]+regTime[2]);
@@ -150,8 +146,6 @@ public class ReadFileCSV {
             res[1] = split;
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
