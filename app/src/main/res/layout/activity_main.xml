@@ -48,7 +48,7 @@
             android:layout_height="fill_parent"
             android:src="@drawable/img_btn_playlist"
             android:background="@null"
-            android:onClick="ClicPlaylist"
+            android:onClick="ClickPlaylist"
             />
 
 

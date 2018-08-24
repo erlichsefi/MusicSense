@@ -19,11 +19,11 @@ public class GPS implements LocationListener {
     private String longitude;
     private Criteria criteria;
     private String provider;
-    private static DataReceiveManager DM;
+    private static DataReceiveManager dataReceiveManagerGps;
 
     public GPS(Context context) {
 
-        DM = DataReceiveManager.getInstance(context);
+        dataReceiveManagerGps = DataReceiveManager.getInstanceGps(context);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -31,13 +31,6 @@ public class GPS implements LocationListener {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
                 (context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         locationManager.requestLocationUpdates("gps", 5000, 0, this);
@@ -64,7 +57,7 @@ public class GPS implements LocationListener {
         longitude = lon + "";
         if (lat != 0 && lon != 0) {
             float gpsArr[] = {lon, lat};
-            DM.addSensorData("GPS", -1, -1, -1, gpsArr);
+            dataReceiveManagerGps.addSensorData("GPS", -1, -1, gpsArr);
             stopGPS();
         }
 
@@ -88,5 +81,4 @@ public class GPS implements LocationListener {
     public void stopGPS() {
         locationManager.removeUpdates(this);
     }
-
 }

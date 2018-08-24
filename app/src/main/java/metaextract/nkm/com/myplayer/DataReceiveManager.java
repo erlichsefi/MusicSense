@@ -1,5 +1,6 @@
 package metaextract.nkm.com.myplayer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 
@@ -9,100 +10,102 @@ import java.util.Calendar;
 
 public class DataReceiveManager {
 
-    private static DataReceiveManager DM;
-    private static DataReceiveManager DM_ACC;
-    private static DataReceiveManager DM_Gravity;
-    private static DataReceiveManager DM_Pressure;
-    private static DataReceiveManager DM_MagneticField;
-    private static DataReceiveManager DM_Orientation;
-    private static DataReceiveManager DM_RotationVector;
+    @SuppressLint("StaticFieldLeak")
+    private static DataReceiveManager dataReceiveManagerHeartRate, dataReceiveManagerGps, dataReceiveManagerStepCounter,
+            dataReceiveManagerAcc, dataReceiveManagerGravity, dataReceiveManagerPressure, dataReceiveManagerMagneticField,
+            dataReceiveManagerOrientation, dataReceiveManagerRotationVector;
 
     private Context context;
     private FileManager fileManager;
-    private ArrayList<Song> songsList = new ArrayList<Song>();
-    private String songName;
-    private GPS gps;
-    private Calendar cc;
-    private int year, month, mDay, mHour, mMinute, mSecond;
+    private Calendar cc = Calendar.getInstance();
 
 
-    public static synchronized DataReceiveManager getInstance(Context context) {
-        if (DM == null) {
-            DM = new DataReceiveManager(context.getApplicationContext());
+    public static synchronized DataReceiveManager getInstanceHeartRate(Context context) {
+        if (dataReceiveManagerHeartRate == null) {
+            dataReceiveManagerHeartRate = new DataReceiveManager(context.getApplicationContext());
         }
-        return DM;
+        return dataReceiveManagerHeartRate;
     }
 
-    public static synchronized DataReceiveManager getInstanceACC(Context context) {
-        if (DM_ACC == null) {
-            DM_ACC = new DataReceiveManager(context.getApplicationContext());
+    public static synchronized DataReceiveManager getInstanceGps(Context context) {
+        if (dataReceiveManagerGps == null) {
+            dataReceiveManagerGps = new DataReceiveManager(context.getApplicationContext());
         }
-        return DM_ACC;
+        return dataReceiveManagerGps;
+    }
+
+    public static synchronized DataReceiveManager getInstanceStepCounter(Context context) {
+        if (dataReceiveManagerStepCounter == null) {
+            dataReceiveManagerStepCounter = new DataReceiveManager(context.getApplicationContext());
+        }
+        return dataReceiveManagerStepCounter;
+    }
+
+    public static synchronized DataReceiveManager getInstanceAcc(Context context) {
+        if (dataReceiveManagerAcc == null) {
+            dataReceiveManagerAcc = new DataReceiveManager(context.getApplicationContext());
+        }
+        return dataReceiveManagerAcc;
     }
 
     public static synchronized DataReceiveManager getInstanceGravity(Context context) {
-        if (DM_Gravity == null) {
-            DM_Gravity = new DataReceiveManager(context.getApplicationContext());
+        if (dataReceiveManagerGravity == null) {
+            dataReceiveManagerGravity = new DataReceiveManager(context.getApplicationContext());
         }
-        return DM_Gravity;
+        return dataReceiveManagerGravity;
     }
 
     public static synchronized DataReceiveManager getInstancePressure(Context context) {
-        if (DM_Pressure == null) {
-            DM_Pressure = new DataReceiveManager(context.getApplicationContext());
+        if (dataReceiveManagerPressure == null) {
+            dataReceiveManagerPressure = new DataReceiveManager(context.getApplicationContext());
         }
-        return DM_Pressure;
+        return dataReceiveManagerPressure;
     }
 
     public static synchronized DataReceiveManager getInstanceMagneticField(Context context) {
-        if (DM_MagneticField == null) {
-            DM_MagneticField = new DataReceiveManager(context.getApplicationContext());
+        if (dataReceiveManagerMagneticField == null) {
+            dataReceiveManagerMagneticField = new DataReceiveManager(context.getApplicationContext());
         }
-        return DM_MagneticField;
+        return dataReceiveManagerMagneticField;
     }
 
     public static synchronized DataReceiveManager getInstanceOrientation(Context context) {
-        if (DM_Orientation == null) {
-            DM_Orientation = new DataReceiveManager(context.getApplicationContext());
+        if (dataReceiveManagerOrientation == null) {
+            dataReceiveManagerOrientation = new DataReceiveManager(context.getApplicationContext());
         }
-        return DM_Orientation;
+        return dataReceiveManagerOrientation;
     }
 
     public static synchronized DataReceiveManager getInstanceRotationVector(Context context) {
-        if (DM_RotationVector == null) {
-            DM_RotationVector = new DataReceiveManager(context.getApplicationContext());
+        if (dataReceiveManagerRotationVector == null) {
+            dataReceiveManagerRotationVector = new DataReceiveManager(context.getApplicationContext());
         }
-        return DM_RotationVector;
+        return dataReceiveManagerRotationVector;
     }
 
-    public DataReceiveManager(Context context) {
+    private DataReceiveManager(Context context) {
         this.context = context;
     }
 
-    public DataReceiveManager(Context context, String filename) {
+    DataReceiveManager(Context context, String filename) {
         this.context = context;
         fileManager = new FileManager(filename, false);
     }
 
-    /**
-     * @param songName
-     */
     public void setSongName(String songName) {
-        this.songName = songName;
         fileManager = new FileManager(songName, false);
-        gps = new GPS(context);
+        new GPS(context);
     }
 
     /**
-     * The function writes to file named SONGLIST.
+     * The function writes to file named SongList.
      *
      * @param songsList - song list.
      */
     public void addSongList(ArrayList<Song> songsList) {
         fileManager.deleteFile();
-        this.songsList = songsList;
         int i = 1;
-        fileManager.writeInternalFileCsvNewLINE("Date : " + mDay + "/" + month + "/" + year, true);
+        fileManager.writeInternalFileCsvNewLINE("Date: " + getDateString(), true);
         for (Song song : songsList) {
             long id = song.getID();
             String title = song.getTitle();
@@ -134,15 +137,8 @@ public class DataReceiveManager {
      * @param activity         - activity that was performed: play, stop etc.
      */
     public void ActivityFILE(String currentSongName, int currentSongIndex, String timeOfSong, String lastSongName, String progress, String activity) {
-        cc = Calendar.getInstance();
-        year = cc.get(Calendar.YEAR);
-        month = cc.get(Calendar.MONTH);
-        mDay = cc.get(Calendar.DAY_OF_MONTH);
-        mHour = cc.get(Calendar.HOUR_OF_DAY);
-        mMinute = cc.get(Calendar.MINUTE);
-        mSecond = cc.get(Calendar.SECOND);
-        fileManager.writeInternalFileCsvNewLINE(mDay + "/" + (month + 1) + "/" + year, true);
-        fileManager.writeInternalFileCsvSameLine(String.format("%02d:%02d:%02d", mHour, mMinute, mSecond), true);
+        fileManager.writeInternalFileCsvNewLINE(getDateString(), true);
+        fileManager.writeInternalFileCsvSameLine(getTimeString(), true);
         fileManager.writeInternalFileCsvSameLine(Integer.toString(currentSongIndex), true);
         fileManager.writeInternalFileCsvSameLine(currentSongName, true);
         fileManager.writeInternalFileCsvSameLine(timeOfSong, true);
@@ -156,22 +152,12 @@ public class DataReceiveManager {
      *
      * @param SensorTypeString - sensor type.
      * @param sensorType       - integer that represents the sensor type.
-     * @param accuracy         - accuracy of the sensor.
      * @param timestamp        - time that the data of the sensor was collected.
      * @param values           - data of the sensor, because it is accelerometer we have 3 values (x,y,z).
      */
-    public void addSensorData(String SensorTypeString, int sensorType, int accuracy, long timestamp, float[] values) {
-
-//      event.sensor.getType() == Sensor.TYPE_HEART_RATE == sensorTypesString
-        cc = Calendar.getInstance();
-        year = cc.get(Calendar.YEAR);
-        month = cc.get(Calendar.MONTH);
-        mDay = cc.get(Calendar.DAY_OF_MONTH);
-        mHour = cc.get(Calendar.HOUR_OF_DAY);
-        mMinute = cc.get(Calendar.MINUTE);
-        mSecond = cc.get(Calendar.SECOND);
-        fileManager.writeInternalFileCsvNewLINE(mDay + "/" + month + "/" + year, true);
-        fileManager.writeInternalFileCsvSameLine(String.format("%02d:%02d:%02d", mHour, mMinute, mSecond), true);
+    public void addSensorData(String SensorTypeString, int sensorType, long timestamp, float[] values) {
+        fileManager.writeInternalFileCsvNewLINE(getDateString(), true);
+        fileManager.writeInternalFileCsvSameLine(getTimeString(), true);
         if (Sensor.TYPE_ACCELEROMETER == sensorType) {
             fileManager.writeInternalFileCsvSameLine(Float.toString(values[0]), true);
             fileManager.writeInternalFileCsvSameLine(Float.toString(values[1]), true);
@@ -202,13 +188,26 @@ public class DataReceiveManager {
         } else if (Sensor.TYPE_PRESSURE == sensorType) {
             fileManager.writeInternalFileCsvSameLine(Float.toString(values[0]), true);
             fileManager.writeInternalFileCsvSameLine(Long.toString(timestamp), true);
-        } else if (SensorTypeString == "GPS") {
+
+        } else if (SensorTypeString.equals("GPS")) {
             fileManager.writeInternalFileCsvSameLine(SensorTypeString, true);
             fileManager.writeInternalFileCsvSameLine(Float.toString(values[0]), true);
             fileManager.writeInternalFileCsvSameLine(Float.toString(values[1]), true);
-        } else { // stepCounter + HeartRate
+
+        } else if (Sensor.TYPE_STEP_COUNTER == sensorType) {
             fileManager.writeInternalFileCsvSameLine(SensorTypeString, true);
+        } else if (Sensor.TYPE_HEART_RATE == sensorType) {
             fileManager.writeInternalFileCsvSameLine(Float.toString(values[0]), true);
         }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private String getDateString() {
+        return String.format("%02d/%02d/%d", cc.get(Calendar.DAY_OF_MONTH), cc.get(Calendar.MONTH) + 1, cc.get(Calendar.YEAR));
+    }
+
+    @SuppressLint("DefaultLocale")
+    private String getTimeString() {
+        return String.format("%02d:%02d:%d", cc.get(Calendar.HOUR_OF_DAY), cc.get(Calendar.MINUTE), cc.get(Calendar.SECOND));
     }
 }

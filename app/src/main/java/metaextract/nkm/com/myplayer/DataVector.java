@@ -15,13 +15,13 @@ public class DataVector {
     public void GetDataFromSensors(String SongName, String StartTime, String FinishTime, String Date) {
         File f = getPublicPicturesDirectory("Log");
         String path = f.getPath();
-        String orientation = path + SongName + "_Orientation.csv";
-        String gravity = path + SongName + "_Gravity.csv";
-        String accelerometer = path + SongName + "_ACC.csv";
-        String magneticField = path + SongName + "_MagneticField.csv";
-        String pressure = path + SongName + "_Pressure.csv";
-        String rotationVector = path + SongName + "_RotationVector.csv";
-        String heartRate = path + SongName + ".csv";
+        String orientation = path + "/" + SongName + "_Orientation.csv";
+        String gravity = path + "/" + SongName + "_Gravity.csv";
+        String accelerometer = path + "/" + SongName + "_ACC.csv";
+        String magneticField = path + "/" + SongName + "_MagneticField.csv";
+        String pressure = path + SongName + "/" + "_Pressure.csv";
+        String rotationVector = path + "/" + SongName + "_RotationVector.csv";
+        String heartRate = path + "/" + SongName + ".csv";
 
         ReadFileCSV read = new ReadFileCSV();
 
@@ -82,5 +82,4 @@ public class DataVector {
         }
         return res;
     }
-
 }
