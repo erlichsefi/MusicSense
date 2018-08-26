@@ -9,28 +9,19 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
 public class SongAdapter extends ArrayAdapter<Song> {
 
-    private ArrayList<Song> SongList;
-    private LayoutInflater songInf;
+    private ArrayList<Song> songList;
 
-
-    /**
-     * @param context
-     * @param resource
-     * @param songList List of Song
-     */
-    public SongAdapter(Context context, int resource, ArrayList<Song> songList) {
+    SongAdapter(Context context, int resource, ArrayList<Song> songList) {
         super(context, resource, songList);
-        SongList = songList;
-        songInf = LayoutInflater.from(context);
+        this.songList = songList;
+        LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-
-        return SongList.size();
+        return songList.size();
     }
 
     @Override
@@ -40,39 +31,19 @@ public class SongAdapter extends ArrayAdapter<Song> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         View view = convertView;
         if (view == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-            view = vi.inflate(R.layout.playlist_item, null);
+            LayoutInflater layoutInflater;
+            layoutInflater = LayoutInflater.from(getContext());
+            view = layoutInflater.inflate(R.layout.playlist_item, null);
         }
-        Song p = getItem(position);
-        if (p != null) {
-            TextView tt1 = (TextView) view.findViewById(R.id.songTitle);
-            if (tt1 != null) {
-                tt1.setText(p.getTitle());
+        Song positionSong = getItem(position);
+        if (positionSong != null) {
+            TextView textView = view.findViewById(R.id.songTitle);
+            if (textView != null) {
+                textView.setText(positionSong.getTitle());
             }
         }
         return view;
-		/*
-		//map to song layout
-		LinearLayout songLay = (LinearLayout)songInf.inflate
-				(R.layout.playlist_item, parent, false);
-		//get title and artist views
-		TextView songView = (TextView)songLay.findViewById(R.id.songTitle);
-		////////////	TextView artistView = (TextView)songLay.findViewById(R.id.song_artist);
-		//get song using position
-		Song currSong = songs.get(position);
-		//get title and artist strings
-		songView.setText(currSong.getTitle());
-		/////////////    artistView.setText(currSong.getArtist());
-		//set position as tag
-		songLay.setTag(position);
-		return songLay;
-		*/
-
-
     }
-
 }

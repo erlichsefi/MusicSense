@@ -1,11 +1,6 @@
 package metaextract.nkm.com.myplayer;
 
-/**
- * The object SeekBar named songProgressBar using this class.
- */
-
 public class Utilities {
-
 
     /**
      * Function to convert milliseconds time to Timer Format Hours:Minutes:Seconds.
@@ -14,20 +9,20 @@ public class Utilities {
      * @param milliseconds - time in milliseconds.
      */
     public String milliSecondsToTimer(long milliseconds) {
-        String finalTimerString = ""; //the final string that represents the format Hours:Minutes:Seconds.
-        String secondsString; //string that represents the seconds.
+        String finalTimerString = ""; // The final string that represents the format Hours:Minutes:Seconds
+        String secondsString; // String that represents the seconds
 
-        //Convert total duration into time.
+        // Convert total duration into time.
         int hours = (int) (milliseconds / (1000 * 60 * 60));
         int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
         int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
 
-        //Add hours if there.
+        // Add hours if there.
         if (hours > 0) {
             finalTimerString = hours + ":";
         }
 
-        //Prepending 0 to seconds if it is one digit.
+        // Prepending 0 to seconds if it is one digit
         if (seconds < 10) {
             secondsString = "0" + seconds;
         } else {
@@ -35,7 +30,7 @@ public class Utilities {
         }
         finalTimerString = finalTimerString + minutes + ":" + secondsString;
 
-        //Return timer string.
+        // Return timer string
         return finalTimerString;
     }
 
@@ -49,14 +44,14 @@ public class Utilities {
     public int getProgressPercentage(long currentDuration, long totalDuration) {
         Double percentage;
 
-        //Convert to seconds.
+        // Convert to seconds
         long currentSeconds = (int) (currentDuration / 1000);
         long totalSeconds = (int) (totalDuration / 1000);
 
-        //Calculating percentage.
+        // Calculating percentage
         percentage = (((double) currentSeconds) / totalSeconds) * 100;
 
-        //Return percentage as integer.
+        // Return percentage as integer
         return percentage.intValue();
     }
 
@@ -72,7 +67,7 @@ public class Utilities {
         totalDuration = (totalDuration / 1000);
         currentDuration = (int) ((((double) progress) / 100) * totalDuration);
 
-        //Return current duration in milliseconds
+        // Return current duration in milliseconds
         return currentDuration * 1000;
     }
 }

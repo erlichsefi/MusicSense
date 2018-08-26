@@ -4,65 +4,55 @@ import android.graphics.Bitmap;
 
 public class Song {
 
-    private long Id;
-    private String Title;
-    private String Artist;
-    private String Data;
-    private String Album;
-    private String Genre;
-    private String Duration;
-    private Bitmap SongImage;
+    private long id;
+    private String title, artist, data, album, genre, duration;
+    private Bitmap image;
 
-    public Song(long songID, String songTitle) {
-        Id = songID;
-        Title = songTitle;
+    Song(long id, String title) {
+        this.id = id;
+        this.title = title;
     }
 
-    public Song(long songID,
-                String songTitle,
-                String songArtist,
-                String songData,
-                String songAlbum,
-                String songGenre, String songDuration, Bitmap songImage) {
-        Id = songID;
-        Title = songTitle;
-        Artist = songArtist;
-        Data = songData;
-        Album = songAlbum;
-        Genre = songGenre;
-        Duration = songDuration;
-        this.SongImage = songImage;
+    Song(long id, String title, String artist, String data, String album, String genre, String duration, Bitmap image) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.data = data;
+        this.album = album;
+        this.genre = genre;
+        this.duration = duration;
+        this.image = image;
     }
 
-    public long getID() {
-        return Id;
+    public long getId() {
+        return id;
     }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public String getArtist() {
-        return Artist;
+        return artist;
     }
 
-    public String getdata() {
-        return Data;
+    public String getData() {
+        return data;
     }
 
     public String getDuration() {
-        return Duration;
+        return duration;
     }
 
     public String getAlbum() {
-        return Album;
+        return album;
     }
 
     public String getGenre() {
-        return Genre;
+        return genre;
     }
 
     public Bitmap getImage() {
-        return SongImage;
+        return image;
     }
 }

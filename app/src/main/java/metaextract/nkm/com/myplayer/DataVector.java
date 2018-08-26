@@ -69,7 +69,7 @@ public class DataVector {
         Datavec.add(read.ReadSensor(heartRate, 3, StartTime, FinishTime));
         //stepCounter
         Datavec.add(read.ReadSensor(stepCounter, 3, StartTime, FinishTime));
-        //gps
+        //Gps
         Datavec.add(read.ReadSensor(gps, 3, StartTime, FinishTime));
 
 
