@@ -99,10 +99,10 @@ public class ManageSensors extends AppCompatActivity {
 
     public void setSongName(String songName) {
         fileManager = new FileManager(songName, false);
-        if (fileManager.file.toString().contains("-Gps")) {
-            Intent intent = new Intent(getApplicationContext(), GpsService.class);
-            startService(intent);
-        }
+//        if (fileManager.file.toString().contains("-Gps")) {
+//            Intent intent = new Intent(getApplicationContext(), GpsService.class);
+//            startService(intent);
+//        }
     }
 
     /**

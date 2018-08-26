@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
   <gradient
-      android:startColor="@color/forest"
-      android:centerColor="@color/forest"
-      android:endColor="@color/forest"
+      android:startColor="@color/gray"
+      android:centerColor="@color/gray"
+      android:endColor="@color/gray"
       android:angle="270" />
 </shape>

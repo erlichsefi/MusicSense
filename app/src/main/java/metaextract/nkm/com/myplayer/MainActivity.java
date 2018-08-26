@@ -529,9 +529,9 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
 
     @Override
     protected void onRestart() {
-//        ActivityReader ar = new ActivityReader(appStartingTime);
-//        ar.extractData();
-//        appStartingTime = getTimeString();
+        ActivityReader ar = new ActivityReader(appStartingTime);
+        ar.extractData();
+        appStartingTime = getTimeString();
         super.onRestart();
     }
 

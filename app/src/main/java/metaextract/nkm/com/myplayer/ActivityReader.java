@@ -37,6 +37,10 @@ class ActivityReader {
                         fr.close();
                         return;
                     }
+                    split = row.split(",");
+                    Time = split[1];
+                    regTime = Time.split(":");
+                    convertedCurrentTime = Double.parseDouble(regTime[0] + regTime[1] + regTime[2]);
                 }
             }
             LastLine = row;

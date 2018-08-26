@@ -70,7 +70,7 @@ public class ReceiveSensors extends WearableListenerService {
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
         Log.d(TAG, "Getting message, path : " + messageEvent.getPath() + " , data : " + new String(messageEvent.getData()));
-        if (messageEvent.getPath().equals("Player")) {
+        if (messageEvent.getPath().equals("musicPlayer")) {
             buttonClickFromWear.MessageReceive(messageEvent);
         }
         if (messageEvent.getPath().equals("Data_Show_Click")) {

@@ -17,11 +17,11 @@ public class DataVector {
         String path = f.getPath();
         String orientation = path + "/" + SongName + "-Orientation.csv";
         String gravity = path + "/" + SongName + "-Gravity.csv";
-        String accelerometer = path + "/" + SongName + "-ACC.csv";
+        String accelerometer = path + "/" + SongName + "-Acc.csv";
         String magneticField = path + "/" + SongName + "-MagneticField.csv";
-        String pressure = path + SongName + "/" + "-Pressure.csv";
+        String pressure = path + "/" + SongName  + "-Pressure.csv";
         String rotationVector = path + "/" + SongName + "-RotationVector.csv";
-        String heartRate = path + "/" + SongName + "HeartRate.csv";
+        String heartRate = path + "/" + SongName + "-HeartRate.csv";
         String gps = path + "/" + SongName + "-Gps.csv";
         String stepCounter = path + "/" + SongName + "-StepCounter.csv";
 
@@ -66,11 +66,11 @@ public class DataVector {
         //rotationVector_5
         Datavec.add(read.ReadSensor(rotationVector, 6, StartTime, FinishTime));
         //heartRate_
-        Datavec.add(read.ReadSensor(heartRate, 3, StartTime, FinishTime));
+        Datavec.add(read.ReadSensor(heartRate, 2, StartTime, FinishTime));
         //stepCounter
-        Datavec.add(read.ReadSensor(stepCounter, 3, StartTime, FinishTime));
+        Datavec.add(read.ReadSensor(stepCounter, 2, StartTime, FinishTime));
         //Gps
-        Datavec.add(read.ReadSensor(gps, 3, StartTime, FinishTime));
+        //Datavec.add(read.ReadSensor(gps, 3, StartTime, FinishTime));
 
 
     }

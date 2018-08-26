@@ -112,23 +112,23 @@ public class MainActivity extends WearableActivity {// implements GoogleApiClien
 //    }
 
     public void play(View view) {
-        STP.sendMessage("Player", "play");
+        STP.sendMessage("musicPlayer", "play");
     }
 
     public void backward(View view) {
-        STP.sendMessage("Player", "backward");
+        STP.sendMessage("musicPlayer", "backward");
     }
 
     public void Previous(View view) {
-        STP.sendMessage("Player", "Previous");
+        STP.sendMessage("musicPlayer", "previous");
     }
 
     public void Next(View view) {
-        STP.sendMessage("Player", "Next");
+        STP.sendMessage("musicPlayer", "next");
     }
 
     public void Forward(View view) {
-        STP.sendMessage("Player", "Forward");
+        STP.sendMessage("musicPlayer", "forward");
     }
 
     public void DataShow1(View view) {
