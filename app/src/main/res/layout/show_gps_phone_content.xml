@@ -47,5 +47,4 @@
         android:layout_weight="0"
         android:textColor="@color/forest"
         android:textSize="15sp" />
-
 </LinearLayout>
