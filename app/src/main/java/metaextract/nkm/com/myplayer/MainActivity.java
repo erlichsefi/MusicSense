@@ -168,7 +168,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     // Create Activity file
                     manageSensorsActivity = new ManageSensors(this, "Activity");
                     writeToActivity("App install");
-                    writeToActivity("App install");
 
                     // Permission was granted, yay! Do the contacts-related task you need to do.
                 } else {
@@ -416,9 +415,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             if (mediaPlayer != null) {
                 mediaPlayer.start();
                 sendToWear.sendMessage("Act", "start");
-                if (songId == -1) {
-                    songId = 0;
-                }
                 writeToActivity("Play");
                 // Changing button image to pause button
                 buttonPlay.setImageResource(R.drawable.icon_pause);
