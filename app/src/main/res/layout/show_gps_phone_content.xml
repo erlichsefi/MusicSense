@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/gray"
+    android:gravity="top|center_horizontal"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="metaextract.nkm.com.myplayer.ShowPhoneGps"
+    tools:showIn="@layout/show_gps_phone_layout">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:layout_weight="0" />
+
+    <TextView
+        android:id="@+id/dateTextBox"
+        android:layout_width="288dp"
+        android:layout_height="30dp"
+        android:layout_weight="0"
+        android:textColor="@color/forest"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/timeTextBox"
+        android:layout_width="288dp"
+        android:layout_height="30dp"
+        android:layout_weight="0"
+        android:textColor="@color/forest"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/latitudeTextBox"
+        android:layout_width="288dp"
+        android:layout_height="30dp"
+        android:layout_weight="0"
+        android:textColor="@color/forest"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/longitudeTextBox"
+        android:layout_width="288dp"
+        android:layout_height="30dp"
+        android:layout_weight="0"
+        android:textColor="@color/forest"
+        android:textSize="15sp" />
+
+</LinearLayout>

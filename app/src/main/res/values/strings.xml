@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">MyPlayer</string>
     <string name="title_activity_main2">ShowData</string>
-
+    <string name="gps_location">Gps location:</string>
+    <string name="accelerometer">Accelerometer:</string>
+    <string name="time_and_date">Time and Date:</string>
+    <string name="send_message_or_data">Send message or data</string>
+    <string name="musicSense">MusicSense</string>
 </resources>

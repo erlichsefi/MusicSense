@@ -4,15 +4,11 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="#f10404"
-        android:dividerHeight="1dp"
-        android:background="@color/wi"
-
-        />
-
+        android:background="@color/gray"
+        android:divider="@color/forest"
+        android:dividerHeight="1dp" />
 </LinearLayout>
