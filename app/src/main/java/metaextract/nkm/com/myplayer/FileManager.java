@@ -46,6 +46,39 @@ public class FileManager {
         }
     }
 
+    //use this constructor to fill the header with values for each column.
+    FileManager(String Filename ,String [] attribute, String [] functions){
+        if (isExternalStorageWritable()) {
+            Log.d(TAG, "External storage writable");
+        } else {
+            Log.d(TAG, "External storage not writable");
+        }
+        File outputStream = getPublicPicturesDirectory("Log");
+        String filePath = outputStream.getPath();
+        file = new File(filePath, Filename + ".csv");
+        if(file.length() == 0) {
+            String [] header = addFunctionsToAttributesNames(attribute,functions);
+            for (String att :
+                    header) {
+                writeInternalFileCsvSameLine(att, true);
+            }
+        }
+    }
+
+    //gets 2 Strings Arrays and combines them together.
+    private String[] addFunctionsToAttributesNames(String [] Attributes , String [] Functions){
+        int counter = 0;
+        String [] res = new String[(Attributes.length*Functions.length)+1];
+        for(int i = 0; i < Functions.length; i++){
+            for (String attribute :
+                    Attributes) {
+                res[counter++] = attribute + Functions[i];
+            }
+        }
+        res [res.length-1] = "Activity";
+        return res;
+    }
+
     public void writeInternalFileCsvNewLINE(String content, boolean append) {
         try {
             FileWriter _file;

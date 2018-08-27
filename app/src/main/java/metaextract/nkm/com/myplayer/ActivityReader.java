@@ -53,8 +53,11 @@ class ActivityReader {
 
     //iterate over all the lines in activity.csv, and extract vectors. keep the last line
     void extractData() {
-        FileManager fm = new FileManager("DataVector", true);
         DataVector dv = new DataVector();
+        //add attributes to DataVector File:
+        String [] attributes = dv.getVectorAttributs();
+        String [] functions = {"_Avg","_SD"};
+        FileManager fm = new FileManager("DataVector",attributes,functions);
         ReadFileCSV read = new ReadFileCSV();
         if (LastLine != null) {
             String[] twoActivityLines = read.ReadActivity(LastLine);
@@ -76,5 +79,4 @@ class ActivityReader {
             }
         }
     }
-
 }
