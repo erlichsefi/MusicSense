@@ -52,12 +52,11 @@ class ActivityReader {
 
 
     //iterate over all the lines in activity.csv, and extract vectors. keep the last line
-    void extractData() {
+    void extractData(MyLambdaFunction [] Functions, String [] functionsName) {
         DataVector dv = new DataVector();
         //add attributes to DataVector File:
-        String [] attributes = dv.getVectorAttributs();
-        String [] functions = {"_Avg","_SD"};
-        FileManager fm = new FileManager("DataVector",attributes,functions);
+        String [] attributes = dv.getVectorAttributes();
+        FileManager fm = new FileManager("DataVector",attributes,functionsName);
         ReadFileCSV read = new ReadFileCSV();
         if (LastLine != null) {
             String[] twoActivityLines = read.ReadActivity(LastLine);
@@ -67,7 +66,7 @@ class ActivityReader {
                 action[0] = twoActivityLines[0].split(",");
                 action[1] = twoActivityLines[1].split(",");
                 dv.GetDataFromSensors(action[0][3], action[0][1], action[1][1]);
-                Vector<Double> ProcessedData = dv.getFinalVector();
+                Vector<Double> ProcessedData = dv.getFinalVector(Functions);
                 if (ProcessedData.size() != 0) {
                     fm.writeInternalFileCsvNewLINE(String.valueOf(ProcessedData.elementAt(0)), true);
                     for (int i = 1; i < ProcessedData.size(); i++) {

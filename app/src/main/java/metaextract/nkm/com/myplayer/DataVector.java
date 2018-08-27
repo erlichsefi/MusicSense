@@ -75,25 +75,22 @@ public class DataVector {
 
     }
 
-    public String[] getVectorAttributs(){
+    public String[] getVectorAttributes(){
         String [] Attributs = {"orientation_x","orientation_y","orientation_z","gravity_x","gravity_y","gravity_z","accelerometer_x","accelerometer_y",
                 "accelerometer_z","magneticField_x","magneticField_y","magneticField_z","pressure","rotationVector_1","rotationVector_2","rotationVector_3",
                 "rotationVector_4","rotationVector_5","heartRate_","stepCounter"};
         return Attributs;
     }
 
-    Vector<Double> getFinalVector() {
-        ArithmeticFunctions arith = new ArithmeticFunctions();
+    Vector<Double> getFinalVector(MyLambdaFunction[] functions) {
         Vector<Double> res = new Vector<>();
-        for (Vector<Double> v :
-                Datavec) {
-            if (v != null && v.size() != 0) res.add(arith.getAvg().Calculate(v));
-            else res.add(null);
-        }
-        for (Vector<Double> v :
-                Datavec) {
-            if (v != null && v.size() != 0) res.add(arith.getSD().Calculate(v));
-            else res.add(null);
+        for(MyLambdaFunction fun:
+                functions) {
+            for (Vector<Double> v :
+                    Datavec) {
+                if (v != null && v.size() != 0) res.add(fun.Calculate(v));
+                else res.add(null);
+            }
         }
         return res;
     }

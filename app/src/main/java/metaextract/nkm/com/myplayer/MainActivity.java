@@ -529,8 +529,11 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
 
     @Override
     protected void onRestart() {
+        ArithmeticFunctions fun = new ArithmeticFunctions();
+        MyLambdaFunction [] LambdaFunctions = {fun.getAvg(),fun.getSD(),fun.getMax(),fun.getMin()};
+        String [] FunctionsName = {"_Avg","_SD","_Max","_Min"};
         ActivityReader ar = new ActivityReader(appStartingTime);
-        ar.extractData();
+        ar.extractData(LambdaFunctions, FunctionsName);
         appStartingTime = getTimeString();
         super.onRestart();
     }
