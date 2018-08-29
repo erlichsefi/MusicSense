@@ -11,7 +11,11 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -23,6 +27,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -35,7 +40,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import org.apache.commons.compress.utils.IOUtils;
 
 public class MainActivity extends Activity implements OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
@@ -170,6 +175,23 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     // Create Activity file
                     manageSensorsActivity = new ManageSensors(this, "Activity");
                     writeToActivity("App install");
+
+                    File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                    File dir = new File(root.getAbsolutePath() + "/temp");
+                    dir.mkdirs();
+                    File file = new File(dir, "knn.model");
+
+                    try {
+                        FileOutputStream outputStream = new FileOutputStream(file);
+                        InputStream inputStream = getResources().openRawResource(getResources().getIdentifier("knn", "raw", getPackageName()));
+                        IOUtils.copy(inputStream, outputStream);
+                        inputStream.close();
+                        outputStream.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     // Permission was granted, yay! Do the contacts-related task you need to do.
                 } else {
@@ -545,11 +567,11 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
 
         super.onRestart();
 
-        String [] FunctionsName = {"_Avg","_SD"};
+        String[] FunctionsName = {"_Avg", "_SD"};
         DataVector dv = new DataVector();
         String song = songsList.get(songId).getTitle();
-        PredictAction p= new PredictAction(dv.getVectorAttributes(),FunctionsName);
-        String res = p.getPrediction(song,appStartingTime,getTimeString());
+        PredictAction p = new PredictAction(dv.getVectorAttributes(), FunctionsName);
+        String res = p.getPrediction(song, appStartingTime, getTimeString());
         // res == the action the machine predicts.
 
     }

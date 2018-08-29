@@ -24,7 +24,8 @@ public class PredictAction {
         double predictValue;
         String predictString = "";
         ArrayList<Attribute> attributes = getAttributes();
-        File inputModel = getPublicPicturesDirectory("Knn.model");
+        File inputModel = getPublicPicturesDirectory("temp");
+        File modelFile = new File(inputModel.getAbsolutePath()+"/knn.model");
         ArithmeticFunctions fun = new ArithmeticFunctions();
         MyLambdaFunction[] LambdaFunctions = {fun.getAvg(), fun.getSD()};
         DataVector dv = new DataVector();
@@ -38,7 +39,7 @@ public class PredictAction {
         DenseInstance instance = new DenseInstance(1, attributeValuesArr);//fill this instance with values from sensors
         instance.setDataset(dataSet);
         try {//load the trained model and make a prediction for a single instance.
-            IBk ibk = (IBk) weka.core.SerializationHelper.read(inputModel.getPath());
+            IBk ibk = (IBk) weka.core.SerializationHelper.read(modelFile.getAbsolutePath());
             predictValue = ibk.classifyInstance(instance);
             predictString = dataSet.classAttribute().value((int) predictValue);
         } catch (Exception e) {
