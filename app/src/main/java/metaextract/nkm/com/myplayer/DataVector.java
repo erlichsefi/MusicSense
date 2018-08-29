@@ -10,7 +10,7 @@ This class uses ReadFileCsv to receive vector with data from a specific point in
 using this, we can calculate different parameters from different sensors.
  */
 public class DataVector {
-    Vector<Vector<Double>> Datavec = new Vector<>();
+    private Vector<Vector<Double>> Datavec = new Vector<>();
 
     public void GetDataFromSensors(String SongName, String StartTime, String FinishTime) {
         File f = getPublicPicturesDirectory("Log");
@@ -19,7 +19,7 @@ public class DataVector {
         String gravity = path + "/" + SongName + "-Gravity.csv";
         String accelerometer = path + "/" + SongName + "-Acc.csv";
         String magneticField = path + "/" + SongName + "-MagneticField.csv";
-        String pressure = path + "/" + SongName  + "-Pressure.csv";
+        String pressure = path + "/" + SongName + "-Pressure.csv";
         String rotationVector = path + "/" + SongName + "-RotationVector.csv";
         String heartRate = path + "/" + SongName + "-HeartRate.csv";
         //String gps = path + "/" + SongName + "-Gps.csv";
@@ -75,23 +75,37 @@ public class DataVector {
 
     }
 
-    public String[] getVectorAttributes(){
-        String [] Attributs = {"orientation_x","orientation_y","orientation_z","gravity_x","gravity_y","gravity_z","accelerometer_x","accelerometer_y",
-                "accelerometer_z","magneticField_x","magneticField_y","magneticField_z","pressure","rotationVector_1","rotationVector_2","rotationVector_3",
-                "rotationVector_4","rotationVector_5","heartRate_","stepCounter"};
+    public String[] getVectorAttributes() {
+        String[] Attributs = {"orientation_x", "orientation_y", "orientation_z", "gravity_x", "gravity_y", "gravity_z", "accelerometer_x", "accelerometer_y",
+                "accelerometer_z", "magneticField_x", "magneticField_y", "magneticField_z", "pressure", "rotationVector_1", "rotationVector_2", "rotationVector_3",
+                "rotationVector_4", "rotationVector_5", "heartRate_", "stepCounter"};
         return Attributs;
     }
 
-    Vector<Double> getFinalVector(MyLambdaFunction[] functions) {
-        Vector<Double> res = new Vector<>();
-        for(MyLambdaFunction fun:
+    double[] getFinalVector(MyLambdaFunction[] functions) {
+        double[] res = new double[Datavec.size() * functions.length];
+        int counter = 0;
+        for (MyLambdaFunction fun :
                 functions) {
             for (Vector<Double> v :
                     Datavec) {
-                if (v != null && v.size() != 0) res.add(fun.Calculate(v));
-                else res.add(null);
+                if (v != null && v.size() != 0) res[counter++] = (fun.Calculate(v));
+                else res[counter++] = (0);
             }
         }
         return res;
     }
+
+
+    void writeVecToFile(MyLambdaFunction[] functions, String[] functionsName) {
+        FileManager fm = new FileManager("DataVector", getVectorAttributes(), functionsName);
+        double[] res = getFinalVector(functions);
+        String[] rowToWrite = new String[res.length + 1];
+        for (int i = 0; i < res.length; i++) {
+            rowToWrite[i] = String.valueOf(res[i]);
+        }
+        rowToWrite[rowToWrite.length - 1] = ("Play");
+        fm.WriteToFile(rowToWrite);
+    }
+
 }
