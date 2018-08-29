@@ -35,6 +35,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 public class MainActivity extends Activity implements OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
     private ImageButton buttonForward, buttonBackward, buttonNext, buttonPrevious, buttonPlay;
@@ -529,18 +531,33 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
 
     @Override
     protected void onRestart() {
+
+        //enable the next code to create training File for machine learning:
+
+        /*
         ArithmeticFunctions fun = new ArithmeticFunctions();
         MyLambdaFunction [] LambdaFunctions = {fun.getAvg(),fun.getSD(),fun.getMax(),fun.getMin()};
         String [] FunctionsName = {"_Avg","_SD","_Max","_Min"};
         ActivityReader ar = new ActivityReader(appStartingTime);
         ar.extractData(LambdaFunctions, FunctionsName);
         appStartingTime = getTimeString();
+        */
+
         super.onRestart();
+
+        String [] FunctionsName = {"_Avg","_SD"};
+        DataVector dv = new DataVector();
+        String song = songsList.get(songId).getTitle();
+        PredictAction p= new PredictAction(dv.getVectorAttributes(),FunctionsName);
+        String res = p.getPrediction(song,appStartingTime,getTimeString());
+        // res == the action the machine predicts.
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
     }
 
     @Override
