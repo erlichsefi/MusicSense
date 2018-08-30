@@ -126,6 +126,9 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             // Create SongList file
             manageSensorsSongList = new ManageSensors(this, "SongList");
             manageSensorsSongList.addSongList(songsList);
+
+            manageSensorsGps.setSongName(currentSongName + "-Gps");
+
             // Create Activity file
             manageSensorsActivity = new ManageSensors(this, "Activity");
             writeToActivity("App start");
@@ -183,6 +186,9 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     // Create SongList file
                     manageSensorsSongList = new ManageSensors(this, "SongList");
                     manageSensorsSongList.addSongList(songsList);
+
+                    manageSensorsGps.setSongName(currentSongName + "-Gps");
+
                     // Create Activity file
                     manageSensorsActivity = new ManageSensors(this, "Activity");
                     writeToActivity("App install");
@@ -282,7 +288,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             lastSongName = currentSongName;
             currentSongName = songsList.get(songIndex).getTitle();
             manageSensorsAcc.setSongName(currentSongName + "-Acc");
-            manageSensorsGps.setSongName(currentSongName + "-Gps");
             manageSensorsGravity.setSongName(currentSongName + "-Gravity");
             manageSensorsPressure.setSongName(currentSongName + "-Pressure");
             manageSensorsHeartRate.setSongName(currentSongName + "-HeartRate");
@@ -549,7 +554,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     }
 
     public void gspClick(View view) {
-        Intent i = new Intent(getApplicationContext(), ShowPhoneGps.class);
+        Intent i = new Intent(getApplicationContext(), GpsService.class);
         startActivityForResult(i, 100);
     }
 
