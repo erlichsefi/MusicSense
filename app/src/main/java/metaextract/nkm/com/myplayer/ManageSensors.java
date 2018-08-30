@@ -5,8 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 
 import static metaextract.nkm.com.myplayer.MainActivity.getDateString;
@@ -24,6 +30,7 @@ public class ManageSensors extends AppCompatActivity {
     private FileManager fileManager;
     private float stepOffset;
     double latitude, longitude;
+    Integer lineIndex = null;
 
     public static synchronized ManageSensors getInstanceHeartRate(Context context) {
         if (manageSensorsHeartRate == null) {
@@ -145,7 +152,14 @@ public class ManageSensors extends AppCompatActivity {
      * @param activity        - activity that was performed: play, stop etc.
      */
     public void activityFile(String currentSongName, int songId, String timeOfSong, String lastSongName, String progress, String activity) {
-        fileManager.writeInternalFileCsvNewLINE(getDateString(), true);
+        if(lineIndex == null){
+            File directorydath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            File path = new File (directorydath + "/Log/Activity.csv");
+            lineIndex = count(path)-3;
+
+        }
+        fileManager.writeInternalFileCsvNewLINE(Integer.toString(lineIndex++),true);
+        fileManager.writeInternalFileCsvSameLine(getDateString(), true);
         fileManager.writeInternalFileCsvSameLine(getTimeString(), true);
         fileManager.writeInternalFileCsvSameLine(Integer.toString(songId), true);
         fileManager.writeInternalFileCsvSameLine(currentSongName, true);
@@ -153,6 +167,27 @@ public class ManageSensors extends AppCompatActivity {
         fileManager.writeInternalFileCsvSameLine(lastSongName, true);
         fileManager.writeInternalFileCsvSameLine(progress, true);
         fileManager.writeInternalFileCsvSameLine(activity, true);
+    }
+
+    public int count(File file) {
+        try {
+            if (file.exists()) {
+                FileReader fr = new FileReader(file);
+                LineNumberReader lnr = new LineNumberReader(fr);
+                int linenumber = 0;
+                while (lnr.readLine() != null) {
+                    linenumber++;
+                }
+                lnr.close();
+                return linenumber;
+
+            } else {
+                Log.d("FILE-COUNT", "File does not exists!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Integer.parseInt(null);
     }
 
     /**

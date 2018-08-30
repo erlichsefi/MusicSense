@@ -51,6 +51,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     ArithmeticFunctions fun = new ArithmeticFunctions();
     MyLambdaFunction[] LambdaFunctions = {fun.getAvg(), fun.getSD()};
     PredictAction p;
+    String[] FunctionsName = {"_Avg", "_SD"};
 
     private int progress;
     private SeekBar seekBar;
@@ -128,6 +129,10 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             // Create Activity file
             manageSensorsActivity = new ManageSensors(this, "Activity");
             writeToActivity("App start");
+            if(p == null){
+                DataVector dv = new DataVector();
+                p = new PredictAction(dv.getVectorAttributes(), FunctionsName);
+            }
         }
 
         // Checks whether there was a request for permission
@@ -200,7 +205,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     }
 
 
-                    String[] FunctionsName = {"_Avg", "_SD"};
+                    //String[] FunctionsName = {"_Avg", "_SD"};
                     DataVector dv = new DataVector();
                     p = new PredictAction(dv.getVectorAttributes(), FunctionsName);
 
@@ -412,20 +417,18 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
      */
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (songId == 0) {
-            playSong(songId);
-        } else if (repeat) {
+        if (repeat) {
             playSong(songId);
         } else if (shuffle) {
             Random rand = new Random();
             songId = rand.nextInt(songsList.size() - 1);
             playSong(songId);
         } else if (songId < (songsList.size() - 1)) {
-            playSong(songId + 1);
-            songId++;
+            playSong(songId++);
+            //songId++;
         } else {
             songId = 0;
-            playSong(songId);
+            playSong(songId++);
         }
     }
 
@@ -551,7 +554,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     }
 
     public void predictionClick(View view) {
-        Toast toast = Toast.makeText(getApplicationContext(), "Start prediction", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(getApplicationContext(), "Predicting action...", Toast.LENGTH_SHORT);
         toast.show();
         String song = songsList.get(songId).getTitle();
         String res = p.getPrediction(song, appStartingTime, getTimeString());

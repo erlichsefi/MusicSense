@@ -50,7 +50,8 @@ public class FileManager {
                 Log.d(TAG, "File created - " + Filename);
                 // If we first time install the app, create head-line for the file.
                 if (Filename.equals("Activity")) {
-                    writeInternalFileCsvNewLINE("Date", true);
+                    writeInternalFileCsvNewLINE("Line index", true);
+                    writeInternalFileCsvSameLine("Date", true);
                     writeInternalFileCsvSameLine("Time", true);
                     writeInternalFileCsvSameLine("Song id", true);
                     writeInternalFileCsvSameLine("Full song name", true);
