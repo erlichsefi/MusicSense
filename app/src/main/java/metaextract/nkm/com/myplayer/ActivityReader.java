@@ -77,4 +77,24 @@ class ActivityReader {
             }
         }
     }
+
+    void updateClassifier(MyLambdaFunction[] Functions, PredictAction p){
+        DataVector dv = new DataVector();
+        ReadFileCSV read = new ReadFileCSV();
+        if(LastLine != null){
+            String[] twoActivityLines = read.ReadActivity(LastLine);
+            while(twoActivityLines != null && twoActivityLines[1] != null){
+                LastLine = twoActivityLines[1];
+                String[][] action = new String[2][];
+                action[0] = twoActivityLines[0].split(",");
+                action[1] = twoActivityLines[1].split(",");
+                dv.GetDataFromSensors(action[0][3], action[0][1],action[1][1]);
+                double [] data = dv.getFinalVector(Functions);
+                double [] dataWithClass = new double[data.length+1];
+                System.arraycopy(data, 0, dataWithClass, 0, data.length);
+                p.updateModel(dataWithClass,action[1][7]);
+                twoActivityLines = read.ReadActivity(LastLine);
+            }
+        }
+    }
 }

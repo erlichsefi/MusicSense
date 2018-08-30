@@ -44,9 +44,13 @@ import org.apache.commons.compress.utils.IOUtils;
 
 public class MainActivity extends Activity implements OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
-    private ImageButton buttonForward, buttonBackward, buttonNext, buttonPrevious, buttonPlay;
+    private ImageButton buttonForward, buttonBackward, buttonNext, buttonPrevious, buttonPlay, buttonRepeat, buttonShuffle;
     private ImageView songImageView;
     private TextView songTitleLabel, songCurrentDurationLabel, songTotalDurationLabel;
+
+    ArithmeticFunctions fun = new ArithmeticFunctions();
+    MyLambdaFunction[] LambdaFunctions = {fun.getAvg(), fun.getSD()};
+    PredictAction p;
 
     private int progress;
     private SeekBar seekBar;
@@ -78,6 +82,8 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         buttonForward = findViewById(R.id.buttonForward);
         buttonBackward = findViewById(R.id.buttonBackward);
         buttonPrevious = findViewById(R.id.buttonPrevious);
+        buttonRepeat = findViewById(R.id.buttonRepeat);
+        buttonShuffle = findViewById(R.id.buttonShuffle);
         songImageView = findViewById(R.id.songImage);
         songTitleLabel = findViewById(R.id.songTitle);
         seekBar = findViewById(R.id.songProgressBar);
@@ -192,6 +198,11 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+
+                    String[] FunctionsName = {"_Avg", "_SD"};
+                    DataVector dv = new DataVector();
+                    p = new PredictAction(dv.getVectorAttributes(), FunctionsName);
 
                     // Permission was granted, yay! Do the contacts-related task you need to do.
                 } else {
@@ -358,12 +369,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         updateProgressBar();
     }
 
-
-    public void buttonToPlayList(View view) {
-        Intent i = new Intent(getApplicationContext(), PlayListActivity.class);
-        startActivityForResult(i, 100);
-    }
-
     /**
      * Receiving song index from playlist view and play the song
      */
@@ -511,10 +516,12 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             repeat = false;
             Toast.makeText(getApplicationContext(), "Repeat of", Toast.LENGTH_SHORT).show();
             writeToActivity("Repeat off");
+            buttonRepeat.setImageResource(R.drawable.icon_repeat);
         } else {
             repeat = true;
             Toast.makeText(getApplicationContext(), "Repeat on", Toast.LENGTH_SHORT).show();
             writeToActivity("Repeat on");
+            buttonRepeat.setImageResource(R.drawable.icon_repeat_on);
         }
     }
 
@@ -523,16 +530,33 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             shuffle = false;
             Toast.makeText(getApplicationContext(), "Shuffle off", Toast.LENGTH_SHORT).show();
             writeToActivity("Shuffle off");
+            buttonShuffle.setImageResource(R.drawable.icon_shuffle);
+
         } else {
             shuffle = true;
             Toast.makeText(getApplicationContext(), "Shuffle on", Toast.LENGTH_SHORT).show();
             writeToActivity("Shuffle on");
+            buttonShuffle.setImageResource(R.drawable.icon_shuffle_on);
         }
     }
 
-    public void infoButton(View view) {
+    public void playListClick(View view) {
+        Intent i = new Intent(getApplicationContext(), PlayListActivity.class);
+        startActivityForResult(i, 100);
+    }
+
+    public void gspClick(View view) {
         Intent i = new Intent(getApplicationContext(), ShowPhoneGps.class);
         startActivityForResult(i, 100);
+    }
+
+    public void predictionClick(View view) {
+        Toast toast = Toast.makeText(getApplicationContext(), "Start prediction", Toast.LENGTH_SHORT);
+        toast.show();
+        String song = songsList.get(songId).getTitle();
+        String res = p.getPrediction(song, appStartingTime, getTimeString());
+        Toast toastResult = Toast.makeText(getApplicationContext(), "You should do:" + "\n" + res, Toast.LENGTH_SHORT);
+        toastResult.show();
     }
 
     public void writeToActivity(String activity) {
@@ -566,12 +590,9 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         */
 
         super.onRestart();
-
-        String[] FunctionsName = {"_Avg", "_SD"};
-        DataVector dv = new DataVector();
-        String song = songsList.get(songId).getTitle();
-        PredictAction p = new PredictAction(dv.getVectorAttributes(), FunctionsName);
-        String res = p.getPrediction(song, appStartingTime, getTimeString());
+        ActivityReader ar = new ActivityReader(appStartingTime);
+        ar.updateClassifier(LambdaFunctions, p);
+        appStartingTime = getTimeString();
         // res == the action the machine predicts.
 
     }

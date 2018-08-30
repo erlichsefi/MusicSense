@@ -14,16 +14,18 @@ import static metaextract.nkm.com.myplayer.FileManager.getPublicPicturesDirector
 
 public class PredictAction {
     private String[] sensors, functions;
+    IBk ibk;
+    ArrayList<String> classes;
 
     public PredictAction(String[] sensors, String[] functions) {
         this.sensors = sensors;
         this.functions = functions;
+        classes = getClasses();
     }
 
     public String getPrediction(String songName, String startTime, String finishTime) {
         double predictValue;
         String predictString = "";
-        ArrayList<Attribute> attributes = getAttributes();
         File inputModel = getPublicPicturesDirectory("temp");
         File modelFile = new File(inputModel.getAbsolutePath()+"/knn.model");
         ArithmeticFunctions fun = new ArithmeticFunctions();
@@ -33,19 +35,44 @@ public class PredictAction {
         double[] att = dv.getFinalVector(LambdaFunctions);
         double[] attributeValuesArr = new double[att.length + 1];
         System.arraycopy(att, 0, attributeValuesArr, 0, att.length);
+        ArrayList<Attribute> attributes = getAttributes();
+        attributes.add(new Attribute("Activity",classes));
         attributeValuesArr[attributeValuesArr.length - 1] = 0; //set the class value to be 0 (missedValue)
         Instances dataSet = new Instances("SingleInstance", attributes, 1);
         dataSet.setClassIndex(dataSet.numAttributes() - 1);
         DenseInstance instance = new DenseInstance(1, attributeValuesArr);//fill this instance with values from sensors
         instance.setDataset(dataSet);
         try {//load the trained model and make a prediction for a single instance.
-            IBk ibk = (IBk) weka.core.SerializationHelper.read(modelFile.getAbsolutePath());
+            ibk = (IBk) weka.core.SerializationHelper.read(modelFile.getAbsolutePath());
             predictValue = ibk.classifyInstance(instance);
             predictString = dataSet.classAttribute().value((int) predictValue);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return predictString;
+    }
+
+    public void updateModel(double [] values, String action){
+        if(this.ibk != null) {
+            File inputModel = getPublicPicturesDirectory("temp");
+            File modelFile = new File(inputModel.getAbsolutePath()+"/knn.model");
+            try {
+                ArrayList<Attribute> attributes = getAttributes();
+                if(classes != null && !classes.contains(action)){
+                    classes.add(action);
+                }
+                attributes.add(new Attribute("Action",classes));
+                Instances dataSet = new Instances("SingleTrainInstance",attributes,1);
+                dataSet.setClassIndex(dataSet.numAttributes()-1);
+                DenseInstance instance = new DenseInstance(1,values);
+                instance.setDataset(dataSet);
+                instance.setClassValue(action);
+                this.ibk.updateClassifier(instance);
+                weka.core.SerializationHelper.write(modelFile.getAbsolutePath(),ibk);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private Instances getInstanceFromCSV(String filename) {
@@ -69,7 +96,8 @@ public class PredictAction {
                 allAttributes) {
             res.add(new Attribute(att));
         }
-        res.add(new Attribute("@@Action@@", getClasses()));
+        if(classes == null) classes = getClasses();
+        //res.add(new Attribute("Action", getClasses()));
         return res;
     }
 
