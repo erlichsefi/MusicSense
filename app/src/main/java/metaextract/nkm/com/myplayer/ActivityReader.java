@@ -21,7 +21,7 @@ class ActivityReader {
             String row = br.readLine();
             if (row != null) {
                 String[] split = row.split(",");
-                Time = split[1];
+                Time = split[2];
                 String[] regTime = Time.split(":");
                 double convertedCurrentTime = Double.parseDouble(regTime[0] + regTime[1] + regTime[2]);
                 String[] regStart = StartingTime.split(":");
@@ -37,7 +37,7 @@ class ActivityReader {
                         return;
                     }
                     split = row.split(",");
-                    Time = split[1];
+                    Time = split[2];
                     regTime = Time.split(":");
                     convertedCurrentTime = Double.parseDouble(regTime[0] + regTime[1] + regTime[2]);
                 }
@@ -64,14 +64,14 @@ class ActivityReader {
                 String[][] action = new String[2][];
                 action[0] = twoActivityLines[0].split(",");
                 action[1] = twoActivityLines[1].split(",");
-                dv.GetDataFromSensors(action[0][3], action[0][1], action[1][1]);
+                dv.GetDataFromSensors(action[0][4], action[0][2], action[1][2]);
                 double[] ProcessedData = dv.getFinalVector(Functions);
                 if (ProcessedData.length != 0) {
                     fm.writeInternalFileCsvNewLINE(String.valueOf(ProcessedData[0]), true);
                     for (int i = 1; i < ProcessedData.length; i++) {
                         fm.writeInternalFileCsvSameLine(String.valueOf(ProcessedData[i]), true);
                     }
-                    fm.writeInternalFileCsvSameLine(action[1][7], true);
+                    fm.writeInternalFileCsvSameLine(action[1][8], true);
                 }
                 twoActivityLines = read.ReadActivity(LastLine);
             }
@@ -88,11 +88,11 @@ class ActivityReader {
                 String[][] action = new String[2][];
                 action[0] = twoActivityLines[0].split(",");
                 action[1] = twoActivityLines[1].split(",");
-                dv.GetDataFromSensors(action[0][3], action[0][1],action[1][1]);
+                dv.GetDataFromSensors(action[0][4], action[0][2],action[1][2]);
                 double [] data = dv.getFinalVector(Functions);
                 double [] dataWithClass = new double[data.length+1];
                 System.arraycopy(data, 0, dataWithClass, 0, data.length);
-                p.updateModel(dataWithClass,action[1][7]);
+                p.updateModel(dataWithClass,action[1][8]);
                 twoActivityLines = read.ReadActivity(LastLine);
             }
         }
