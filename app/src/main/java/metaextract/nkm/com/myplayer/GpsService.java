@@ -70,11 +70,6 @@ public class GpsService extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_gps_phone_layout);
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        toolbar.setBackgroundColor(Color.rgb(87, 121, 106));
-//        toolbar.setTitle(R.string.gps_location);
-//        toolbar.setTitleTextColor(Color.BLACK);
-//        setSupportActionBar(toolbar);
 
         latitudeTextView = findViewById(R.id.latitude_text);
         longitudeTextView = findViewById(R.id.longitude_text);
