@@ -548,7 +548,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         startActivityForResult(i, 100);
     }
 
-    public void gspClick(View view) {
+    public void gpsClick(View view) {
         Intent i = new Intent(getApplicationContext(), ShowPhoneGps.class);
         startActivityForResult(i, 100);
     }
