@@ -5,46 +5,46 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/gray"
-    android:gravity="top|center_horizontal"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="metaextract.nkm.com.myplayer.ShowPhoneGps"
+    tools:context="metaextract.nkm.com.myplayer.GpsService"
     tools:showIn="@layout/show_gps_phone_layout">
 
-    <Space
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:layout_weight="0" />
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"></LinearLayout>
 
     <TextView
-        android:id="@+id/dateTextBox"
-        android:layout_width="288dp"
-        android:layout_height="30dp"
-        android:layout_weight="0"
-        android:textColor="@color/forest"
-        android:textSize="15sp" />
+        android:id="@+id/latitude_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
 
     <TextView
-        android:id="@+id/timeTextBox"
-        android:layout_width="288dp"
-        android:layout_height="30dp"
-        android:layout_weight="0"
-        android:textColor="@color/forest"
-        android:textSize="15sp" />
+        android:id="@+id/longitude_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
 
     <TextView
-        android:id="@+id/latitudeTextBox"
-        android:layout_width="288dp"
-        android:layout_height="30dp"
-        android:layout_weight="0"
-        android:textColor="@color/forest"
-        android:textSize="15sp" />
+        android:id="@+id/last_update_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
 
     <TextView
-        android:id="@+id/longitudeTextBox"
-        android:layout_width="288dp"
-        android:layout_height="30dp"
-        android:layout_weight="0"
-        android:textColor="@color/forest"
-        android:textSize="15sp" />
+        android:id="@+id/location_inadequate_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/location_settings_inadequate_warning"
+        android:visibility="invisible" />
 </LinearLayout>
