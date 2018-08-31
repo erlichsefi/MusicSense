@@ -15,14 +15,18 @@
 
     <uses-feature android:name="android.hardware.location.gps" />
 
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/musicSense"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name="android.support.multidex.MultiDexApplication">
+        android:theme="@style/AppTheme">
 
         <activity
             android:name=".MainActivity"
@@ -36,23 +40,23 @@
         </activity>
         <activity android:name=".PlayListActivity" />
         <activity
-            android:name=".ShowPhoneGps"
+            android:name=".GpsService"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/gps_location"
             android:parentActivityName=".MainActivity"
+            android:scaleType="centerInside"
+            android:label="@string/gps_location"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="metaextract.nkm.com.myplayer.MainActivity" />
         </activity>
 
-        <service android:name=".GpsService" />
-
         <service android:name=".ReceiveSensors">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER"
+                <action
+                    android:name="com.google.android.gms.wearable.BIND_LISTENER"
                     tools:ignore="WearableBindListener" />
             </intent-filter>
         </service>

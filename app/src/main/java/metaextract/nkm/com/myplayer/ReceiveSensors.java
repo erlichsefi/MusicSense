@@ -74,7 +74,7 @@ public class ReceiveSensors extends WearableListenerService {
             buttonClickFromWear.MessageReceive(messageEvent);
         }
         if (messageEvent.getPath().equals("Data_Show_Click")) {
-            Intent i = new Intent(getApplicationContext(), ShowPhoneGps.class);
+            Intent i = new Intent(getApplicationContext(), GpsService.class);
             startActivity(i);
         }
     }

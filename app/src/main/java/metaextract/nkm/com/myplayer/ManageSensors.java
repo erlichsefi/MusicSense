@@ -1,10 +1,7 @@
 package metaextract.nkm.com.myplayer;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,7 +26,6 @@ public class ManageSensors extends AppCompatActivity {
     private Context context;
     private FileManager fileManager;
     private float stepOffset;
-    double latitude, longitude;
     Integer lineIndex = null;
 
     public static synchronized ManageSensors getInstanceHeartRate(Context context) {
@@ -106,10 +102,6 @@ public class ManageSensors extends AppCompatActivity {
 
     public void setSongName(String songName) {
         fileManager = new FileManager(songName, false);
-//        if (fileManager.file.toString().contains("-Gps")) {
-//            Intent intent = new Intent(getApplicationContext(), GpsService.class);
-//            startService(intent);
-//        }
     }
 
     /**
@@ -240,33 +232,9 @@ public class ManageSensors extends AppCompatActivity {
                 fileManager.writeInternalFileCsvSameLine(Float.toString(step), true);
                 break;
             case "Gps":
-                fileManager.writeInternalFileCsvSameLine(SensorTypeString, true);
                 fileManager.writeInternalFileCsvSameLine(Float.toString(values[0]), true);
                 fileManager.writeInternalFileCsvSameLine(Float.toString(values[1]), true);
                 break;
         }
-    }
-
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            latitude = Double.valueOf(intent.getStringExtra("latitude"));
-            longitude = Double.valueOf(intent.getStringExtra("longitude"));
-
-            float gpsArray[] = {(float) longitude, (float) latitude};
-            manageSensorsGps.addSensorData("Gps", gpsArray);
-        }
-    };
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(broadcastReceiver, new IntentFilter(GpsService.str_receiver));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
     }
 }
