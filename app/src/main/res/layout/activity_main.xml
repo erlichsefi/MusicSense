@@ -38,7 +38,7 @@
             android:layout_height="60dp"
             android:background="@null"
             android:contentDescription="@null"
-            android:onClick="gspClick"
+            android:onClick="gpsClick"
             android:scaleType="centerInside"
             android:src="@drawable/icon_gps" />
 
