@@ -23,12 +23,14 @@ public class FileManager {
         File outputStream = getPublicPicturesDirectory("Log");
         String filePath = outputStream.getPath();
         file = new File(filePath, Filename + ".csv");
-        try {
-            writer = new CSVWriter(new FileWriter(filePath + "/" + Filename + ".csv"));
-            String[] header = addFunctionsToAttributesNames(Filename, attribute, functions);
-            writer.writeNext(header);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(file.length() == 0) {
+            try {
+                writer = new CSVWriter(new FileWriter(filePath + "/" + Filename + ".csv"));
+                String[] header = addFunctionsToAttributesNames(Filename, attribute, functions);
+                writer.writeNext(header);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

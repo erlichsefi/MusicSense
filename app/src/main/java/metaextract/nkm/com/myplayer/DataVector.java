@@ -22,7 +22,7 @@ public class DataVector {
         String pressure = path + "/" + SongName + "-Pressure.csv";
         String rotationVector = path + "/" + SongName + "-RotationVector.csv";
         String heartRate = path + "/" + SongName + "-HeartRate.csv";
-        //String gps = path + "/" + SongName + "-Gps.csv";
+        String gps = path + "/" + SongName + "-Gps.csv";
         String stepCounter = path + "/" + SongName + "-StepCounter.csv";
 
 
@@ -69,8 +69,10 @@ public class DataVector {
         Datavec.add(read.ReadSensor(heartRate, 2, StartTime, FinishTime));
         //stepCounter
         Datavec.add(read.ReadSensor(stepCounter, 2, StartTime, FinishTime));
-        //Gps
-        //Datavec.add(read.ReadSensor(gps, 3, StartTime, FinishTime));
+        //Gps_alt
+        Datavec.add(read.ReadSensor(gps, 2, StartTime, FinishTime));
+        //Gps_long
+        Datavec.add(read.ReadSensor(gps, 3, StartTime, FinishTime));
 
 
     }
@@ -78,7 +80,7 @@ public class DataVector {
     public String[] getVectorAttributes() {
         String[] Attributs = {"orientation_x", "orientation_y", "orientation_z", "gravity_x", "gravity_y", "gravity_z", "accelerometer_x", "accelerometer_y",
                 "accelerometer_z", "magneticField_x", "magneticField_y", "magneticField_z", "pressure", "rotationVector_1", "rotationVector_2", "rotationVector_3",
-                "rotationVector_4", "rotationVector_5", "heartRate_", "stepCounter"};
+                "rotationVector_4", "rotationVector_5", "heartRate_", "stepCounter","gps_altitude","gps_longitude"};
         return Attributs;
     }
 

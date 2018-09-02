@@ -508,6 +508,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             songId = 0;
             playSong(songId++);
         }
+        writeToActivity("Do nothing");
     }
 
     public void play(View view) {
@@ -775,7 +776,10 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         /*
         ArithmeticFunctions fun = new ArithmeticFunctions();
         MyLambdaFunction [] LambdaFunctions = {fun.getAvg(),fun.getSD(),fun.getMax(),fun.getMin()};
-        String [] FunctionsName = {"_Avg","_SD","_Max","_Min"};
+        String [] FunctionsName = {"_Avg","_SD"};
+        */
+
+        /*
         ActivityReader ar = new ActivityReader(appStartingTime);
         ar.extractData(LambdaFunctions, FunctionsName);
         appStartingTime = getTimeString();
