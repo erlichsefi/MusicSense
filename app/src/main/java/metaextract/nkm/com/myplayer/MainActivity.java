@@ -3,23 +3,26 @@ package metaextract.nkm.com.myplayer;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
 
@@ -29,16 +32,29 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 
 import org.apache.commons.compress.utils.IOUtils;
 
@@ -71,6 +87,28 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             manageSensorsPressure, manageSensorsMagneticField, manageSensorsOrientation,
             manageSensorsRotationVector, manageSensorsActivity, manageSensorsSongList,
             manageSensorsHeartRate, manageSensorsStepCounter, manageSensorsGps;
+
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+
+    private final static String KEY_LOCATION = "location";
+    private final static String KEY_REQUESTING_LOCATION_UPDATES = "requesting-location-updates";
+    private final static String KEY_LAST_UPDATED_TIME_STRING = "last-updated-time-string";
+
+    private Location currentLocation;
+    private SettingsClient settingsClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+    private LocationSettingsRequest locationSettingsRequest;
+    private FusedLocationProviderClient mFusedLocationClient;
+
+    private Boolean requestingLocationUpdates;
+    private String lastUpdateTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +146,20 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         manageSensorsMagneticField = ManageSensors.getInstanceMagneticField(this);
         manageSensorsRotationVector = ManageSensors.getInstanceRotationVector(this);
 
+        requestingLocationUpdates = false;
+        lastUpdateTime = "";
+
+        updateValuesFromBundle(savedInstanceState);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        settingsClient = LocationServices.getSettingsClient(this);
+
+        createLocationCallback();
+        createLocationRequest();
+        buildLocationSettingsRequest();
+        startLocationUpdates();
+        manageSensorsGps.setSongName(currentSongName);
+
         // Checking for permission
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 
@@ -127,12 +179,11 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             manageSensorsSongList = new ManageSensors(this, "SongList");
             manageSensorsSongList.addSongList(songsList);
 
-            manageSensorsGps.setSongName(currentSongName + "-Gps");
-
             // Create Activity file
             manageSensorsActivity = new ManageSensors(this, "Activity");
             writeToActivity("App start");
-            if(p == null){
+
+            if (p == null) {
                 DataVector dv = new DataVector();
                 p = new PredictAction(dv.getVectorAttributes(), FunctionsName);
             }
@@ -172,6 +223,18 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                         && grantResults[2] == PackageManager.PERMISSION_GRANTED
                         && grantResults[3] == PackageManager.PERMISSION_GRANTED)//ACCESS_COARSE_LOCATION
                 {
+
+                    if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+                        if (grantResults.length <= 0) {
+                            Log.i(TAG, "User interaction was cancelled.");
+                        } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            if (requestingLocationUpdates) {
+                                Log.i(TAG, "Permission granted, updates requested, starting location updates");
+                                startLocationUpdates();
+                            }
+                        }
+                    }
+
                     songsList = getPlayList();
                     //Sort abc....
                     Collections.sort(songsList, new Comparator<Song>() {
@@ -186,8 +249,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     // Create SongList file
                     manageSensorsSongList = new ManageSensors(this, "SongList");
                     manageSensorsSongList.addSongList(songsList);
-
-                    manageSensorsGps.setSongName(currentSongName + "-Gps");
 
                     // Create Activity file
                     manageSensorsActivity = new ManageSensors(this, "Activity");
@@ -204,12 +265,9 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                         IOUtils.copy(inputStream, outputStream);
                         inputStream.close();
                         outputStream.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
 
                     //String[] FunctionsName = {"_Avg", "_SD"};
                     DataVector dv = new DataVector();
@@ -288,6 +346,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             lastSongName = currentSongName;
             currentSongName = songsList.get(songIndex).getTitle();
             manageSensorsAcc.setSongName(currentSongName + "-Acc");
+            manageSensorsGps.setSongName(currentSongName + "-Gps");
             manageSensorsGravity.setSongName(currentSongName + "-Gravity");
             manageSensorsPressure.setSongName(currentSongName + "-Pressure");
             manageSensorsHeartRate.setSongName(currentSongName + "-HeartRate");
@@ -385,11 +444,25 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 100) {
-            songId = Objects.requireNonNull(data.getExtras()).getInt("songTitle");
-            // play selected song
-            playSong(songId);
-            writeToActivity("Choose song");
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        Log.i(TAG, "User agreed to make required location settings changes.");
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Log.i(TAG, "User chose not to make required location settings changes.");
+                        requestingLocationUpdates = false;
+                        updateLocation();
+                        break;
+                }
+                break;
+            case 100:
+                songId = Objects.requireNonNull(data.getExtras()).getInt("songTitle");
+                // play selected song
+                playSong(songId);
+                writeToActivity("Choose song");
+                break;
         }
     }
 
@@ -553,11 +626,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         startActivityForResult(i, 100);
     }
 
-    public void gpsClick(View view) {
-        Intent i = new Intent(getApplicationContext(), GpsService.class);
-        startActivityForResult(i, 100);
-    }
-
     public void predictionClick(View view) {
         Toast toast = Toast.makeText(getApplicationContext(), "Predicting action...", Toast.LENGTH_SHORT);
         toast.show();
@@ -583,9 +651,125 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         return String.format("%02d:%02d:%d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
     }
 
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.keySet().contains(KEY_REQUESTING_LOCATION_UPDATES)) {
+                requestingLocationUpdates = savedInstanceState.getBoolean(KEY_REQUESTING_LOCATION_UPDATES);
+            }
+            if (savedInstanceState.keySet().contains(KEY_LOCATION)) {
+                currentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            }
+            if (savedInstanceState.keySet().contains(KEY_LAST_UPDATED_TIME_STRING)) {
+                lastUpdateTime = savedInstanceState.getString(KEY_LAST_UPDATED_TIME_STRING);
+            }
+            updateLocation();
+        }
+    }
+
+    private void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void createLocationCallback() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                currentLocation = locationResult.getLastLocation();
+                lastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+                updateLocation();
+            }
+        };
+    }
+
+    private void buildLocationSettingsRequest() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
+        locationSettingsRequest = builder.build();
+    }
+
+    private void startLocationUpdates() {
+        // Begin by checking if the device has the necessary location settings.
+        settingsClient.checkLocationSettings(locationSettingsRequest)
+                .addOnSuccessListener(this, locationSettingsResponse -> {
+                    Log.i(TAG, "All location settings are satisfied.");
+
+                    if (ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                    updateLocation();
+                })
+                .addOnFailureListener(this, e -> {
+                    int statusCode = ((ApiException) e).getStatusCode();
+                    switch (statusCode) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade " + "location settings ");
+                            try {
+                                ResolvableApiException rae = (ResolvableApiException) e;
+                                rae.startResolutionForResult(this, REQUEST_CHECK_SETTINGS);
+                            } catch (IntentSender.SendIntentException sie) {
+                                Log.i(TAG, "PendingIntent unable to execute request.");
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            String errorMessage = "Location settings are inadequate, and cannot be " + "fixed here. Fix in Settings.";
+                            Log.e(TAG, errorMessage);
+                            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+                            requestingLocationUpdates = false;
+                    }
+                    updateLocation();
+                });
+    }
+
+    private void updateLocation() {
+        if (currentLocation != null) {
+            float gpsData[] = {(float) currentLocation.getLatitude(), (float) currentLocation.getLongitude()};
+            manageSensorsGps.addSensorData("Gps", gpsData);
+        }
+    }
+
+    private void stopLocationUpdates() {
+        if (!requestingLocationUpdates) {
+            Log.d(TAG, "stopLocationUpdates: updates never requested, no-op.");
+            return;
+        }
+        mFusedLocationClient.removeLocationUpdates(locationCallback).addOnCompleteListener(this, task -> requestingLocationUpdates = false);
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(KEY_REQUESTING_LOCATION_UPDATES, requestingLocationUpdates);
+        savedInstanceState.putParcelable(KEY_LOCATION, currentLocation);
+        savedInstanceState.putString(KEY_LAST_UPDATED_TIME_STRING, lastUpdateTime);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    private boolean checkPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        boolean shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+        } else {
+            Log.i(TAG, "Requesting permission");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
     @Override
     protected void onRestart() {
-
         //enable the next code to create training File for machine learning:
 
         /*
@@ -608,12 +792,19 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     @Override
     public void onResume() {
         super.onResume();
+        if (requestingLocationUpdates && checkPermissions()) {
+            startLocationUpdates();
+        } else if (!checkPermissions()) {
+            requestPermissions();
+        }
+        updateLocation();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        stopLocationUpdates();
     }
 
     @Override

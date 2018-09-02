@@ -148,7 +148,6 @@ public class ManageSensors extends AppCompatActivity {
             File directorydath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             File path = new File (directorydath + "/Log/Activity.csv");
             lineIndex = count(path)-3;
-
         }
         fileManager.writeInternalFileCsvNewLINE(Integer.toString(lineIndex++),true);
         fileManager.writeInternalFileCsvSameLine(getDateString(), true);
