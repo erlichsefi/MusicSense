@@ -774,25 +774,18 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         //enable the next code to create training File for machine learning:
 
         /*
-        ArithmeticFunctions fun = new ArithmeticFunctions();
-        MyLambdaFunction [] LambdaFunctions = {fun.getAvg(),fun.getSD(),fun.getMax(),fun.getMin()};
-        String [] FunctionsName = {"_Avg","_SD"};
-        */
-
         super.onRestart();
         ActivityReader ar = new ActivityReader(appStartingTime);
         ar.extractData(LambdaFunctions, FunctionsName);
         appStartingTime = getTimeString();
+        */
 
-
-
-
-        /*
+        //enable the next code to update  model file:
+        super.onRestart();
         ActivityReader ar = new ActivityReader(appStartingTime);
         ar.updateClassifier(LambdaFunctions, p);
         appStartingTime = getTimeString();
-        // res == the action the machine predicts.
-        */
+
     }
 
     @Override
