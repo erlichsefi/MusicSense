@@ -61,7 +61,7 @@ public class PredictAction {
                 if(classes != null && !classes.contains(action)){
                     classes.add(action);
                 }
-                attributes.add(new Attribute("Action",classes));
+                attributes.add(new Attribute("Activity",classes));
                 Instances dataSet = new Instances("SingleTrainInstance",attributes,1);
                 dataSet.setClassIndex(dataSet.numAttributes()-1);
                 DenseInstance instance = new DenseInstance(1,values);
@@ -103,15 +103,19 @@ public class PredictAction {
 
     private ArrayList<String> getClasses() {
         ArrayList<String> res = new ArrayList<>();
-        res.add("Progress bar");
-        res.add("next");
-        res.add("forward");
         res.add("Play");
+        res.add("Do nothing");
+        res.add("next");
         res.add("Shuffle on");
+        res.add("forward");
+        res.add("Repeat on");
+        res.add("Repeat off");
         res.add("Stop");
+        res.add("previous");
         res.add("Choose song");
+        res.add("Progress bar");
+        res.add("Backward");
         res.add("Shuffle off");
-        res.add("do nothing");
         return res;
     }
 }
