@@ -459,7 +459,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                 break;
             case 100:
                 songId = Objects.requireNonNull(data.getExtras()).getInt("songTitle");
-                // play selected song
                 playSong(songId);
                 writeToActivity("Choose song");
                 break;
@@ -486,6 +485,9 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         }
         if (intent.getExtras().getInt("forward") == 5) {
             buttonForward.performClick();
+        }
+        if (intent.getExtras().getInt("playList") == 6) {
+            return;
         }
     }
 
@@ -797,7 +799,6 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
             requestPermissions();
         }
         updateLocation();
-
     }
 
     @Override

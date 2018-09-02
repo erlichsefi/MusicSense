@@ -70,4 +70,12 @@ public class PlayListActivity extends ListActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent openMainActivity= new Intent(this, MainActivity.class);
+        openMainActivity.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        openMainActivity.putExtra("playList", 6);
+        startActivity(openMainActivity);
+    }
 }
