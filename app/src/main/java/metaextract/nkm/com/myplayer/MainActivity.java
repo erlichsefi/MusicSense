@@ -779,18 +779,20 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
         String [] FunctionsName = {"_Avg","_SD"};
         */
 
-        /*
+        super.onRestart();
         ActivityReader ar = new ActivityReader(appStartingTime);
         ar.extractData(LambdaFunctions, FunctionsName);
         appStartingTime = getTimeString();
-        */
 
-        super.onRestart();
+
+
+
+        /*
         ActivityReader ar = new ActivityReader(appStartingTime);
         ar.updateClassifier(LambdaFunctions, p);
         appStartingTime = getTimeString();
         // res == the action the machine predicts.
-
+        */
     }
 
     @Override

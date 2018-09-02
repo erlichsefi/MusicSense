@@ -14,7 +14,6 @@ public class FileManager {
 
     private static final String TAG = "FileManager";
     protected File file;
-    CSVWriter writer;
 
     FileManager() {
     }
@@ -25,9 +24,11 @@ public class FileManager {
         file = new File(filePath, Filename + ".csv");
         if(file.length() == 0) {
             try {
+                CSVWriter writer;
                 writer = new CSVWriter(new FileWriter(filePath + "/" + Filename + ".csv"));
                 String[] header = addFunctionsToAttributesNames(Filename, attribute, functions);
                 writer.writeNext(header);
+                writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -69,8 +70,10 @@ public class FileManager {
     }
 
     public void WriteToFile(String[] line) {
-        writer.writeNext(line);
         try {
+            FileWriter fw = new FileWriter(file.getAbsolutePath(),true);
+            CSVWriter writer = new CSVWriter(fw);
+            writer.writeNext(line);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

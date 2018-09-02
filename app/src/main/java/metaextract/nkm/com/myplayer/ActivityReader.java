@@ -66,12 +66,13 @@ class ActivityReader {
                 action[1] = twoActivityLines[1].split(",");
                 dv.GetDataFromSensors(action[0][4], action[0][2], action[1][2]);
                 double[] ProcessedData = dv.getFinalVector(Functions);
+                String [] res = new String[ProcessedData.length+1];
                 if (ProcessedData.length != 0) {
-                    fm.writeInternalFileCsvNewLINE(String.valueOf(ProcessedData[0]), true);
-                    for (int i = 1; i < ProcessedData.length; i++) {
-                        fm.writeInternalFileCsvSameLine(String.valueOf(ProcessedData[i]), true);
+                    for (int i = 0; i < ProcessedData.length; i++) {
+                        res[i] = (String.valueOf(ProcessedData[i]));
                     }
-                    fm.writeInternalFileCsvSameLine(action[1][8], true);
+                    res[res.length-1] = action[1][8];
+                    fm.WriteToFile(res);
                 }
                 twoActivityLines = read.ReadActivity(LastLine);
             }
