@@ -29,7 +29,7 @@ public class MagneticField implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         try {
-            DataShow.print("MagneticField", event);
+            MainActivity.print("MagneticField", event);
         } catch (Exception e) {
         }
         STP.sendSensorData(

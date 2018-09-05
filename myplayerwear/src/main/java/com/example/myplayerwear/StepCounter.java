@@ -28,12 +28,10 @@ public class StepCounter implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            msg = " Value Step Counter : " + (int) event.values[0];
-            //////////////////////////
+            msg = "" + (int) event.values[0];
             STP.sendSensorData(event.sensor.getStringType(), event.sensor.getType(), event.accuracy, event.timestamp, event.values);
-            //////////////////////////
             try {
-                DataShow.print("SC", event);
+                MainActivity.print("StepCounter", event);
             } catch (Exception e) {
             }
         }

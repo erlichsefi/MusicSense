@@ -1,80 +1,80 @@
 package com.example.myplayerwear;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.SensorEvent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
+import android.support.wear.widget.WearableRecyclerView;
+import android.widget.TextView;
 
-public class MainActivity extends WearableActivity {// implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends WearableActivity {
 
+    private SendToPhone sendToPhone;
+    private ManageOfSensors manageOfSensors;
+    private WearableRecyclerView mWearableRecyclerView;
 
-    private SendToPhone STP;
-    private ManageOfSensors ManageOfSensors;
-
+    private static TextView accelerometer_x_Text, accelerometer_y_Text, accelerometer_z_Text,
+            heartRateText, stepCounterText, gravity_x_Text, gravity_y_Text, gravity_z_Text,
+            magneticField_x_Text, magneticField_y_Text, magneticField_z_Text,
+            orientation_x_Text, orientation_y_Text, orientation_z_Text,
+            pressureText, rotationVector_x_Text, rotationVector_y_Text, rotationVector_z_Text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        STP = SendToPhone.getInstance(this);
-        ManageOfSensors = ManageOfSensors.getInstance(this);
+        sendToPhone = SendToPhone.getInstance(this);
+        manageOfSensors = ManageOfSensors.getInstance(this);
 
+        mWearableRecyclerView = findViewById(R.id.recycler_view);
+        mWearableRecyclerView.setEdgeItemsCenteringEnabled(true);
+        mWearableRecyclerView.setFocusable(false);
 
-        //permission
-
-        //------- Checking for permission ------
+        // Checking for permission
         int permissionCheck = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        //------- If there is permission then we will get the song list ------
         if (permissionCheck == 0) {
+            manageOfSensors = ManageOfSensors.getInstance(this);
+            initialization();
         }
 
-        //------- Checks whether there was a request for permission ------
+        // Checks whether there was a request for permission
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            //------ If permission denied ------
+            // If permission denied
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             }
-            //------ Requesting permission ------
+            // Requesting permission
             else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.BODY_SENSORS,
-                                Manifest.permission.ACCESS_COARSE_LOCATION},
-                        1);
+                ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.BODY_SENSORS,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                // app-defined int constant. The callback method gets the result of the request.
             }
         }
     }
 
-    //----- Getting approval for permission ------
-
     /**
      * Getting approval for permission
-     *
-     * @param requestCode  - The code for the specific permission
-     * @param permissions
-     * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            //------ READ_EXTERNAL_STORAGE -------
+            // READ_EXTERNAL_STORAGE
             case 1: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
@@ -82,59 +82,144 @@ public class MainActivity extends WearableActivity {// implements GoogleApiClien
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED //BODY_SENSORS
                         && grantResults[2] == PackageManager.PERMISSION_GRANTED)//ACCESS_COARSE_LOCATION
                 {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission was granted, yay! Do the contacts-related task you need to do.
+                    initialization();
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    //Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    //startActivity(i);
+                    // permission denied, boo! Disable the functionality that depends on this permission.
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
+            // other 'case' lines to check for other permissions this app might request
         }
     }
 
-//    @Override
-//    //Connect to the external node.
-//    protected void onStart() {
-//        super.onStart();
-//        mGoogleApiClient.connect();
-//    }
-//
-//    @Override
-//    //Clean up the connection as the activity stops.
-//    protected void onStop() {
-//        super.onStop();
-//        mGoogleApiClient.disconnect();
-//    }
+    private void initialization() {
+        heartRateText = findViewById(R.id.heartRateText);
+        //startHeartRate();
+
+        accelerometer_x_Text = findViewById(R.id.accelerometer_x);
+        accelerometer_y_Text = findViewById(R.id.accelerometer_y);
+        accelerometer_z_Text = findViewById(R.id.accelerometer_z);
+        //startAccelerometer();
+
+        stepCounterText = findViewById(R.id.stepCounterText);
+        //startStepCounter();
+
+        gravity_x_Text = findViewById(R.id.gravity_x);
+        gravity_y_Text = findViewById(R.id.gravity_y);
+        gravity_z_Text = findViewById(R.id.gravity_z);
+        //startGravity();
+
+        magneticField_x_Text = findViewById(R.id.magneticField_x);
+        magneticField_y_Text = findViewById(R.id.magneticField_y);
+        magneticField_z_Text = findViewById(R.id.magneticField_z);
+        //startMagneticField();
+
+        orientation_x_Text = findViewById(R.id.orientation_x);
+        orientation_y_Text = findViewById(R.id.orientation_y);
+        orientation_z_Text = findViewById(R.id.orientation_z);
+        //startOrientation();
+
+        pressureText = findViewById(R.id.pressureText);
+        //startPressure();
+
+        rotationVector_x_Text = findViewById(R.id.rotationVector_x);
+        rotationVector_y_Text = findViewById(R.id.rotationVector_y);
+        rotationVector_z_Text = findViewById(R.id.rotationVector_z);
+        //startRotationVector();
+    }
 
     public void play(View view) {
-        STP.sendMessage("musicPlayer", "play");
+        sendToPhone.sendMessage("musicPlayer", "play");
+    }
+
+    public void next(View view) {
+        sendToPhone.sendMessage("musicPlayer", "next");
+    }
+
+    public void forward(View view) {
+        sendToPhone.sendMessage("musicPlayer", "forward");
     }
 
     public void backward(View view) {
-        STP.sendMessage("musicPlayer", "backward");
+        sendToPhone.sendMessage("musicPlayer", "backward");
     }
 
-    public void Previous(View view) {
-        STP.sendMessage("musicPlayer", "previous");
+    public void previous(View view) {
+        sendToPhone.sendMessage("musicPlayer", "previous");
     }
 
-    public void Next(View view) {
-        STP.sendMessage("musicPlayer", "next");
+
+    public void startStepCounter() {
+        manageOfSensors.StartStepCounter();
     }
 
-    public void Forward(View view) {
-        STP.sendMessage("musicPlayer", "forward");
+    public void startAccelerometer() {
+        manageOfSensors.StartAccelerometer();
     }
 
-    public void DataShow1(View view) {
-        Intent intent = new Intent(this, DataShow.class);
-        //  intent.putExtra("sampleObject", (Parcelable) mGoogleApiClient);
-        startActivity(intent);
+    public void startHeartRate() {
+        manageOfSensors.StartHeartrRate();
+    }
 
+    public void startGravity() {
+        manageOfSensors.StartGravity();
+    }
+
+    public void startMagneticField() {
+        manageOfSensors.StartMagneticField();
+    }
+
+    public void startOrientation() {
+        manageOfSensors.StartOrientation();
+    }
+
+    public void startPressure() {
+        manageOfSensors.StartPressure();
+    }
+
+    public void startRotationVector() {
+        manageOfSensors.StartRotationVector();
+    }
+
+    public static void print(String sensor, SensorEvent event) {
+        switch (sensor) {
+            case "Accelerometer":
+                accelerometer_x_Text.setText("x: " + (int) event.values[0]);
+                accelerometer_y_Text.setText("y: " + (int) event.values[1]);
+                accelerometer_z_Text.setText("z: " + (int) event.values[2]);
+                break;
+            case "HeartRate":
+                String heartRateValue = "" + (int) event.values[0];
+                heartRateText.setText(heartRateValue);
+                break;
+            case "StepCounter":
+                String stepCounterValue = "" + (int) event.values[0];
+                stepCounterText.setText(stepCounterValue);
+                break;
+            case "Gravity":
+                gravity_x_Text.setText("x: " + (int) event.values[0]);
+                gravity_y_Text.setText("y: " + (int) event.values[1]);
+                gravity_z_Text.setText("z: " + (int) event.values[2]);
+                break;
+            case "MagneticField":
+                magneticField_x_Text.setText("x: " + (int) event.values[0]);
+                magneticField_y_Text.setText("y: " + (int) event.values[1]);
+                magneticField_z_Text.setText("z: " + (int) event.values[2]);
+                break;
+            case "Orientation":
+                orientation_x_Text.setText("x: " + (int) event.values[0]);
+                orientation_y_Text.setText("y: " + (int) event.values[1]);
+                orientation_z_Text.setText("z: " + (int) event.values[2]);
+                break;
+            case "Pressure":
+                pressureText.setText("" + (int) event.values[0]);
+                break;
+            case "RotationVector":
+                rotationVector_x_Text.setText("x: " + (int) event.values[0]);
+                rotationVector_y_Text.setText("y: " + (int) event.values[1]);
+                rotationVector_z_Text.setText("z: " + (int) event.values[2]);
+                break;
+        }
     }
 }

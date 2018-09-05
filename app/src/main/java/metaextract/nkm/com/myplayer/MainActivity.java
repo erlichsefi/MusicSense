@@ -258,15 +258,16 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
                     File dir = new File(root.getAbsolutePath() + "/temp");
                     dir.mkdirs();
                     File file = new File(dir, "knn.model");
-
-                    try {
-                        FileOutputStream outputStream = new FileOutputStream(file);
-                        InputStream inputStream = getResources().openRawResource(getResources().getIdentifier("knn", "raw", getPackageName()));
-                        IOUtils.copy(inputStream, outputStream);
-                        inputStream.close();
-                        outputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(file.length() == 0) {
+                        try {
+                            FileOutputStream outputStream = new FileOutputStream(file);
+                            InputStream inputStream = getResources().openRawResource(getResources().getIdentifier("knn", "raw", getPackageName()));
+                            IOUtils.copy(inputStream, outputStream);
+                            inputStream.close();
+                            outputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     //String[] FunctionsName = {"_Avg", "_SD"};
@@ -696,7 +697,7 @@ public class MainActivity extends Activity implements OnCompletionListener, Seek
     }
 
     private void startLocationUpdates() {
-        // Begin by checking if the device has the necessary location settings.
+        // Begin by checking if the device has the necessary location setting§s.
         settingsClient.checkLocationSettings(locationSettingsRequest)
                 .addOnSuccessListener(this, locationSettingsResponse -> {
                     Log.i(TAG, "All location settings are satisfied.");

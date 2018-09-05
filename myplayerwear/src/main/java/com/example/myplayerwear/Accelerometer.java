@@ -28,7 +28,7 @@ public class Accelerometer implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //print on dataShow
         try {
-            DataShow.print("AC", event);
+            MainActivity.print("Accelerometer", event);
         } catch (Exception e) {
         }
 

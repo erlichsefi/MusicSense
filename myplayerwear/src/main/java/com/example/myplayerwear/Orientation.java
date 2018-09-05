@@ -27,7 +27,7 @@ public class Orientation implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //print on datashow
         try {
-            DataShow.print("Orientation", event);
+            MainActivity.print("Orientation", event);
         } catch (Exception e) {
         }
 

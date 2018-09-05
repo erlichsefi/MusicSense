@@ -32,16 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/buttonGps"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@null"
-            android:contentDescription="@null"
-            android:onClick="gpsClick"
-            android:scaleType="centerInside"
-            android:src="@drawable/icon_gps" />
-
     </LinearLayout>
 
     <LinearLayout

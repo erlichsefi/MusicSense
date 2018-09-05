@@ -33,7 +33,7 @@ public class HeartRate implements SensorEventListener {
         if (SM != null) {
             if (MyHeartRateSensor != null) {
                 if (event.sensor.getType() == Sensor.TYPE_HEART_RATE) {
-                    msg = " Value sensor: " + (int) event.values[0];
+                    msg = "" + (int) event.values[0];
                     STP.sendSensorData(
                             event.sensor.getStringType(),
                             event.sensor.getType(),
@@ -42,7 +42,7 @@ public class HeartRate implements SensorEventListener {
                             event.values);
                 }
                 try {
-                    DataShow.print("H", event);
+                    MainActivity.print("HeartRate", event);
                 } catch (Exception e) {
                 }
             }

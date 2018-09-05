@@ -27,7 +27,7 @@ public class RotationVector implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //print on datashow
         try {
-            DataShow.print("RotationVector", event);
+            MainActivity.print("RotationVector", event);
         } catch (Exception e) {
         }
 

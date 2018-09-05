@@ -28,7 +28,7 @@ public class Gravity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         try {
-            DataShow.print("Gravity", event);
+            MainActivity.print("Gravity", event);
         } catch (Exception e) {
         }
         STP.sendSensorData(

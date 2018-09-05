@@ -29,7 +29,7 @@ public class Pressure implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //print on datashow
         try {
-            DataShow.print("Pressure",event);
+            MainActivity.print("Pressure",event);
         }catch (Exception e){
         }
 
